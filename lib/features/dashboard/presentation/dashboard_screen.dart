@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../data/providers/startup_provider.dart';
+import '../../../features/transactions/providers/transaction_list_provider.dart';
 
 class DashboardScreen extends ConsumerWidget {
   const DashboardScreen({super.key});
@@ -9,6 +10,7 @@ class DashboardScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final startup = ref.watch(startupProvider);
+    final transactions = ref.watch(transactionsProvider);
 
     return startup.when(
       loading: () {
@@ -20,7 +22,13 @@ class DashboardScreen extends ConsumerWidget {
       data: (_) {
         return Scaffold(
           appBar: AppBar(title: const Text('Luum')),
-          body: const Center(child: Text('Database Initialized')),
+          body: transactions.when(
+            data: (items) {
+              return Text('Transactions: ${items.length}');
+            },
+            loading: () => const CircularProgressIndicator(),
+            error: (e, _) => Text(e.toString()),
+          ),
         );
       },
     );
