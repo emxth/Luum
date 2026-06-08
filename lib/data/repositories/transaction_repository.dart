@@ -26,4 +26,10 @@ class TransactionRepository {
       database.transactions,
     )..where((tbl) => tbl.id.equals(id))).go();
   }
+
+  Future<Transaction?> getById(String id) {
+    return (database.select(
+      database.transactions,
+    )..where((tbl) => tbl.id.equals(id))).getSingleOrNull();
+  }
 }
