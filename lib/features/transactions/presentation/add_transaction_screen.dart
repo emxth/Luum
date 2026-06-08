@@ -30,6 +30,36 @@ class _AddTransactionScreenState extends ConsumerState<AddTransactionScreen> {
   String? selectedCategoryId;
   String? selectedPaymentMethodId;
   DateTime selectedDate = DateTime.now();
+  bool _isLoading = true;
+  late String _transactionType;
+
+  @override
+  void initState() {
+    super.initState();
+    _transactionType = widget.transactionType;
+    if (widget.transactionId != null) {
+      _loadExistingTransaction();
+    } else {
+      _isLoading = false;
+    }
+  }
+
+  void _loadExistingTransaction() async {
+    final repository = ref.read(transactionRepositoryProvider);
+    final transaction = await repository.getById(widget.transactionId!);
+
+    if (transaction != null && mounted) {
+      setState(() {
+        amountController.text = transaction.amount.toString();
+        noteController.text = transaction.note ?? '';
+        selectedCategoryId = transaction.categoryId;
+        selectedPaymentMethodId = transaction.paymentMethodId;
+        selectedDate = DateTime.parse(transaction.date);
+        _transactionType = transaction.type;
+        _isLoading = false;
+      });
+    }
+  }
 
   // Saves the transaction to the database and updates the transaction list.
   Future<void> saveTransaction() async {
@@ -67,19 +97,38 @@ class _AddTransactionScreenState extends ConsumerState<AddTransactionScreen> {
       return;
     }
 
-    await repository.createTransaction(
-      TransactionsCompanion.insert(
-        id: const Uuid().v4(),
-        date: selectedDate.toIso8601String(),
-        amount: amount,
-        type: widget.transactionType,
-        categoryId: selectedCategoryId!,
-        paymentMethodId: Value(selectedPaymentMethodId),
-        note: Value(noteController.text.isEmpty ? null : noteController.text),
-        createdAt: now,
-        updatedAt: now,
-      ),
-    );
+    if (widget.transactionId != null) {
+      // Update existing transaction
+      final existingTransaction =
+          await repository.getById(widget.transactionId!);
+      if (existingTransaction != null) {
+        await repository.updateTransaction(
+          existingTransaction.copyWith(
+            date: selectedDate.toIso8601String(),
+            amount: amount,
+            categoryId: selectedCategoryId!,
+            paymentMethodId: Value(selectedPaymentMethodId),
+            note: Value(noteController.text.isEmpty ? null : noteController.text),
+            updatedAt: now,
+          ),
+        );
+      }
+    } else {
+      // Create new transaction
+      await repository.createTransaction(
+        TransactionsCompanion.insert(
+          id: const Uuid().v4(),
+          date: selectedDate.toIso8601String(),
+          amount: amount,
+          type: _transactionType,
+          categoryId: selectedCategoryId!,
+          paymentMethodId: Value(selectedPaymentMethodId),
+          note: Value(noteController.text.isEmpty ? null : noteController.text),
+          createdAt: now,
+          updatedAt: now,
+        ),
+      );
+    }
 
     if (mounted) {
       ref.invalidate(transactionsProvider);
@@ -105,16 +154,27 @@ class _AddTransactionScreenState extends ConsumerState<AddTransactionScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final categories = widget.transactionType == 'expense'
+    if (_isLoading && widget.transactionId != null) {
+      return Scaffold(
+        appBar: AppBar(title: const Text('Loading...')),
+        body: const Center(child: CircularProgressIndicator()),
+      );
+    }
+
+    final categories = _transactionType == 'expense'
         ? ref.watch(expenseCategoriesProvider)
         : ref.watch(incomeCategoriesProvider);
 
     final paymentMethods = ref.watch(paymentMethodsProvider);
 
+    final isEditing = widget.transactionId != null;
+
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          widget.transactionType == 'expense' ? 'Add Expense' : 'Add Income',
+          isEditing
+              ? 'Edit Transaction'
+              : (_transactionType == 'expense' ? 'Add Expense' : 'Add Income'),
         ),
       ),
       body: categories.when(
@@ -186,7 +246,7 @@ class _AddTransactionScreenState extends ConsumerState<AddTransactionScreen> {
               // Save button
               ElevatedButton(
                 onPressed: saveTransaction,
-                child: const Text('Save'),
+                child: Text(isEditing ? 'Update' : 'Save'),
               ),
             ],
           );
