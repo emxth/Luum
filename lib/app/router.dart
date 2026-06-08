@@ -1,6 +1,7 @@
 import 'package:go_router/go_router.dart';
 
 import '../features/transactions/presentation/add_transaction_screen.dart';
+import '../features/transactions/presentation/transaction_list_screen.dart';
 import '../features/dashboard/presentation/dashboard_screen.dart';
 
 final router = GoRouter(
@@ -13,9 +14,18 @@ final router = GoRouter(
     ),
 
     GoRoute(
-      path: '/transactions/add',
+      path: '/transactions/add/:type',
       builder: (context, state) {
-        return const AddTransactionScreen();
+        final type = state.pathParameters['type']!;
+
+        return AddTransactionScreen(transactionType: type);
+      },
+    ),
+
+    GoRoute(
+      path: '/transactions',
+      builder: (context, state) {
+        return const TransactionListScreen();
       },
     ),
   ],
