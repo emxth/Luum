@@ -28,10 +28,16 @@ class TransactionDetailsScreen extends ConsumerWidget {
               Text('Type: ${item.type}'),
               Text('Date: ${item.date}'),
               Text('Note: ${item.note ?? ''}'),
-              
+
               ElevatedButton(
-                onPressed: () {
-                  context.push('/transactions/edit/${item.id}');
+                onPressed: () async {
+                  final updated = await context.push<bool>(
+                    '/transactions/edit/${item.id}',
+                  );
+
+                  if (updated == true) {
+                    ref.invalidate(transactionDetailsProvider(transactionId));
+                  }
                 },
                 child: const Text('Edit'),
               ),

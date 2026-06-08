@@ -1,4 +1,5 @@
 import 'package:drift/drift.dart' hide Column;
+import 'package:go_router/go_router.dart';
 import 'package:uuid/uuid.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -6,6 +7,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../data/database/app_database.dart';
 import '../../../data/providers/transaction_provider.dart';
 import '../providers/category_list_provider.dart';
+import '../providers/transaction_details_provider.dart';
 import '../providers/transaction_list_provider.dart';
 import '../providers/payment_method_list_provider.dart';
 
@@ -48,7 +50,9 @@ class _AddTransactionScreenState extends ConsumerState<AddTransactionScreen> {
     final repository = ref.read(transactionRepositoryProvider);
     final transaction = await repository.getById(widget.transactionId!);
 
-    if (transaction != null && mounted) {
+    if (!mounted) return;
+
+    if (transaction != null) {
       setState(() {
         amountController.text = transaction.amount.toString();
         noteController.text = transaction.note ?? '';
@@ -56,9 +60,24 @@ class _AddTransactionScreenState extends ConsumerState<AddTransactionScreen> {
         selectedPaymentMethodId = transaction.paymentMethodId;
         selectedDate = DateTime.parse(transaction.date);
         _transactionType = transaction.type;
-        _isLoading = false;
       });
     }
+
+    setState(() {
+      _isLoading = false;
+    });
+  }
+
+  bool validate() {
+    if (amountController.text.isEmpty) {
+      return false;
+    }
+
+    if (selectedCategoryId == null) {
+      return false;
+    }
+
+    return true;
   }
 
   // Saves the transaction to the database and updates the transaction list.
@@ -70,18 +89,6 @@ class _AddTransactionScreenState extends ConsumerState<AddTransactionScreen> {
     final repository = ref.read(transactionRepositoryProvider);
 
     final now = DateTime.now().toIso8601String();
-
-    bool validate() {
-      if (amountController.text.isEmpty) {
-        return false;
-      }
-
-      if (selectedCategoryId == null) {
-        return false;
-      }
-
-      return true;
-    }
 
     final amount = double.tryParse(amountController.text);
 
@@ -99,8 +106,9 @@ class _AddTransactionScreenState extends ConsumerState<AddTransactionScreen> {
 
     if (widget.transactionId != null) {
       // Update existing transaction
-      final existingTransaction =
-          await repository.getById(widget.transactionId!);
+      final existingTransaction = await repository.getById(
+        widget.transactionId!,
+      );
       if (existingTransaction != null) {
         await repository.updateTransaction(
           existingTransaction.copyWith(
@@ -108,7 +116,9 @@ class _AddTransactionScreenState extends ConsumerState<AddTransactionScreen> {
             amount: amount,
             categoryId: selectedCategoryId!,
             paymentMethodId: Value(selectedPaymentMethodId),
-            note: Value(noteController.text.isEmpty ? null : noteController.text),
+            note: Value(
+              noteController.text.isEmpty ? null : noteController.text,
+            ),
             updatedAt: now,
           ),
         );
@@ -132,7 +142,12 @@ class _AddTransactionScreenState extends ConsumerState<AddTransactionScreen> {
 
     if (mounted) {
       ref.invalidate(transactionsProvider);
-      Navigator.pop(context);
+
+      if (widget.transactionId != null) {
+        ref.invalidate(transactionDetailsProvider(widget.transactionId!));
+      }
+
+      context.pop(true);
     }
   }
 
