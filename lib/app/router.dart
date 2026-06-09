@@ -1,5 +1,7 @@
 import 'package:go_router/go_router.dart';
 
+import '../features/goals/presentation/add_goal_screen.dart';
+import '../features/goals/presentation/goals_screen.dart';
 import '../features/transactions/presentation/add_transaction_screen.dart';
 import '../features/transactions/presentation/transaction_list_screen.dart';
 import '../features/transactions/presentation/transaction_details_screen.dart';
@@ -7,6 +9,7 @@ import '../features/dashboard/presentation/dashboard_screen.dart';
 
 final router = GoRouter(
   routes: [
+    // Dashboard route
     GoRoute(
       path: '/',
       builder: (context, state) {
@@ -14,6 +17,8 @@ final router = GoRouter(
       },
     ),
 
+
+    // Transactions routes
     GoRoute(
       path: '/transactions/add/:type',
       builder: (context, state) {
@@ -48,5 +53,11 @@ final router = GoRouter(
         );
       },
     ),
+
+
+    // Goals routes
+    GoRoute(path: '/goals', builder: (_, __) => const GoalsScreen()),
+
+    GoRoute(path: '/goals/add', builder: (_, __) => const AddGoalScreen()),
   ],
 );
