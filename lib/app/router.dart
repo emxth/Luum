@@ -1,6 +1,8 @@
 import 'package:go_router/go_router.dart';
 
+import '../features/goals/presentation/add_goal_contribution_screen.dart';
 import '../features/goals/presentation/add_goal_screen.dart';
+import '../features/goals/presentation/goal_details_screen.dart';
 import '../features/goals/presentation/goals_screen.dart';
 import '../features/transactions/presentation/add_transaction_screen.dart';
 import '../features/transactions/presentation/transaction_list_screen.dart';
@@ -16,7 +18,6 @@ final router = GoRouter(
         return const DashboardScreen();
       },
     ),
-
 
     // Transactions routes
     GoRoute(
@@ -54,10 +55,23 @@ final router = GoRouter(
       },
     ),
 
-
     // Goals routes
-    GoRoute(path: '/goals', builder: (_, __) => const GoalsScreen()),
+    GoRoute(path: '/goals', builder: (_, _) => const GoalsScreen()),
 
-    GoRoute(path: '/goals/add', builder: (_, __) => const AddGoalScreen()),
+    GoRoute(path: '/goals/add', builder: (_, _) => const AddGoalScreen()),
+
+    GoRoute(
+      path: '/goals/details/:id',
+      builder: (context, state) {
+        return GoalDetailsScreen(goalId: state.pathParameters['id']!);
+      },
+    ),
+
+    GoRoute(
+      path: '/goals/:id/contribute',
+      builder: (context, state) {
+        return AddGoalContributionScreen(goalId: state.pathParameters['id']!);
+      },
+    ),
   ],
 );
