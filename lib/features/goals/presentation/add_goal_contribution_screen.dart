@@ -6,8 +6,12 @@ import 'package:uuid/uuid.dart';
 
 import '../../../data/database/app_database.dart';
 import '../../../data/providers/goal_provider.dart';
+import '../providers/active_goals_provider.dart';
+import '../providers/completed_goals_provider.dart';
 import '../providers/goal_contributions_provider.dart';
+import '../providers/goal_dashboard_provider.dart';
 import '../providers/goal_details_provider.dart';
+import '../providers/goals_provider.dart';
 
 class AddGoalContributionScreen extends ConsumerStatefulWidget {
   final String goalId;
@@ -44,9 +48,19 @@ class _AddGoalContributionScreenState
       ),
     );
 
+    await repository.updateGoalCompletion(widget.goalId);
+
     ref.invalidate(goalDetailsProvider(widget.goalId));
 
     ref.invalidate(goalContributionsProvider(widget.goalId));
+
+    ref.invalidate(goalsProvider);
+
+    ref.invalidate(activeGoalsProvider);
+
+    ref.invalidate(completedGoalsProvider);
+
+    ref.invalidate(goalDashboardProvider);
 
     if (mounted) {
       context.pop();
