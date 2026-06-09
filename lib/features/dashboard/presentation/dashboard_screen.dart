@@ -3,7 +3,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../data/providers/startup_provider.dart';
-import '../../../features/transactions/providers/transaction_list_provider.dart';
+import '../../transactions/providers/recent_transactions_provider.dart';
+import '../providers/dashboard_provider.dart';
 
 class DashboardScreen extends ConsumerWidget {
   const DashboardScreen({super.key});
@@ -11,7 +12,8 @@ class DashboardScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final startup = ref.watch(startupProvider);
-    final transactions = ref.watch(transactionsProvider);
+    final dashboard = ref.watch(dashboardProvider);
+    final recent = ref.watch(recentTransactionsProvider);
 
     return startup.when(
       loading: () {
@@ -25,25 +27,64 @@ class DashboardScreen extends ConsumerWidget {
           appBar: AppBar(title: const Text('Luum')),
           body: Column(
             children: [
-              transactions.when(
-                data: (items) {
-                  return Text('Transactions: ${items.length}');
+              dashboard.when(
+                data: (summary) {
+                  return Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text('Balance: Rs. ${summary.balance}'),
+
+                      Text('Income: Rs. ${summary.totalIncome}'),
+
+                      Text('Expense: Rs. ${summary.totalExpense}'),
+
+                      const Divider(),
+
+                      Text('This Month Income: Rs. ${summary.monthIncome}'),
+
+                      Text('This Month Expense: Rs. ${summary.monthExpense}'),
+
+                      Text('This Month Balance: Rs. ${summary.monthBalance}'),
+                    ],
+                  );
                 },
                 loading: () => const CircularProgressIndicator(),
                 error: (e, _) => Text(e.toString()),
               ),
+
+              recent.when(
+                data: (items) {
+                  return Column(
+                    children: [
+                      const Text('Recent Transactions'),
+
+                      ...items.map((transaction) {
+                        return ListTile(
+                          title: Text(transaction.type),
+                          subtitle: Text('Rs. ${transaction.amount}'),
+                        );
+                      }),
+                    ],
+                  );
+                },
+                loading: () => const CircularProgressIndicator(),
+                error: (e, _) => Text(e.toString()),
+              ),
+
               ElevatedButton(
                 onPressed: () {
                   context.push('/transactions/add/expense');
                 },
                 child: const Text('Add Expense'),
               ),
+
               ElevatedButton(
                 onPressed: () {
                   context.push('/transactions/add/income');
                 },
                 child: const Text('Add Income'),
               ),
+
               ElevatedButton(
                 onPressed: () {
                   context.push('/transactions');
