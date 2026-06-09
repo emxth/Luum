@@ -35,9 +35,22 @@ class GoalDetailsScreen extends ConsumerWidget {
 
               Text('Remaining: Rs. ${goal.remaining}'),
 
-              Text('Progress: ${(goal.progress * 100).toStringAsFixed(1)}%'),
+              LinearProgressIndicator(value: goal.progress),
+
+              Text('${(goal.progress * 100).toStringAsFixed(1)}%'),
+
+              Text(goal.isCompleted ? 'Completed' : 'Active'),
+
+              ElevatedButton(
+                onPressed: () {
+                  context.push('/goals/$goalId/contribute');
+                },
+                child: const Text('Add Contribution'),
+              ),
 
               const Divider(),
+
+              const Text('Contribution History'),
 
               Expanded(
                 child: contributions.when(
