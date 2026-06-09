@@ -45,4 +45,25 @@ class GoalRepository {
 
     return contributions.fold<double>(0.0, (sum, item) => sum + item.amount);
   }
+
+  Future<void> updateGoalCompletion(String goalId) async {
+    final goal = await getGoalById(goalId);
+
+    if (goal == null) {
+      return;
+    }
+
+    final balance = await getGoalBalance(goalId);
+
+    final completed = balance >= goal.targetAmount;
+
+    await (database.update(
+      database.goals,
+    )..where((g) => g.id.equals(goalId))).write(
+      GoalsCompanion(
+        isCompleted: Value(completed),
+        updatedAt: Value(DateTime.now().toIso8601String()),
+      ),
+    );
+  }
 }
