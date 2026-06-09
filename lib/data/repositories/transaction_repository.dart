@@ -32,4 +32,73 @@ class TransactionRepository {
       database.transactions,
     )..where((tbl) => tbl.id.equals(id))).getSingleOrNull();
   }
+
+  Future<double> getTotalIncome() async {
+    final rows = await (database.select(
+      database.transactions,
+    )..where((t) => t.type.equals('income'))).get();
+
+    return rows.fold<double>(0.0, (sum, item) => sum + item.amount);
+  }
+
+  Future<double> getTotalExpense() async {
+    final rows = await (database.select(
+      database.transactions,
+    )..where((t) => t.type.equals('expense'))).get();
+
+    return rows.fold<double>(0.0, (sum, item) => sum + item.amount);
+  }
+
+  Future<double> getCurrentBalance() async {
+    final income = await getTotalIncome();
+    final expense = await getTotalExpense();
+
+    return income - expense;
+  }
+
+  Future<double> getCurrentMonthIncome() async {
+    final now = DateTime.now();
+
+    final rows = await database.select(database.transactions).get();
+
+    return rows
+        .where((t) {
+          final date = DateTime.parse(t.date);
+
+          return t.type == 'income' &&
+              date.year == now.year &&
+              date.month == now.month;
+        })
+        .fold<double>(0.0, (sum, t) => sum + t.amount);
+  }
+
+  Future<double> getCurrentMonthExpense() async {
+    final now = DateTime.now();
+
+    final rows = await database.select(database.transactions).get();
+
+    return rows
+        .where((t) {
+          final date = DateTime.parse(t.date);
+
+          return t.type == 'expense' &&
+              date.year == now.year &&
+              date.month == now.month;
+        })
+        .fold<double>(0.0, (sum, t) => sum + t.amount);
+  }
+
+  Future<double> getCurrentMonthBalance() async {
+    final monthIncome = await getCurrentMonthIncome();
+    final monthExpense = await getCurrentMonthExpense();
+
+    return monthIncome - monthExpense;
+  }
+
+  Future<List<Transaction>> getRecentTransactions() {
+    return (database.select(database.transactions)
+          ..orderBy([(t) => OrderingTerm.desc(t.date)])
+          ..limit(5))
+        .get();
+  }
 }
