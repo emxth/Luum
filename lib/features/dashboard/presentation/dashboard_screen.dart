@@ -3,6 +3,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../data/providers/startup_provider.dart';
+import '../../goals/providers/active_goals_provider.dart';
+import '../../goals/providers/goal_dashboard_provider.dart';
 import '../../transactions/providers/recent_transactions_provider.dart';
 import '../providers/dashboard_provider.dart';
 
@@ -14,6 +16,8 @@ class DashboardScreen extends ConsumerWidget {
     final startup = ref.watch(startupProvider);
     final dashboard = ref.watch(dashboardProvider);
     final recent = ref.watch(recentTransactionsProvider);
+    final goalSummary = ref.watch(goalDashboardProvider);
+    final activeGoals = ref.watch(activeGoalsProvider);
 
     return startup.when(
       loading: () {
@@ -62,6 +66,47 @@ class DashboardScreen extends ConsumerWidget {
                         return ListTile(
                           title: Text(transaction.type),
                           subtitle: Text('Rs. ${transaction.amount}'),
+                        );
+                      }),
+                    ],
+                  );
+                },
+                loading: () => const CircularProgressIndicator(),
+                error: (e, _) => Text(e.toString()),
+              ),
+
+              goalSummary.when(
+                data: (summary) {
+                  return Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const Text('Goals Summary'),
+
+                      Text('Goals: ${summary.totalGoals}'),
+
+                      Text('Active: ${summary.activeGoals}'),
+
+                      Text('Completed: ${summary.completedGoals}'),
+
+                      Text('Saved: Rs. ${summary.totalSaved}'),
+                    ],
+                  );
+                },
+                loading: () => const CircularProgressIndicator(),
+                error: (e, _) => Text(e.toString()),
+              ),
+
+              activeGoals.when(
+                data: (goals) {
+                  return Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const Text('Active Goals'),
+
+                      ...goals.take(3).map((goal) {
+                        return ListTile(
+                          title: Text(goal.name),
+                          subtitle: Text('Target: Rs. ${goal.targetAmount}'),
                         );
                       }),
                     ],
