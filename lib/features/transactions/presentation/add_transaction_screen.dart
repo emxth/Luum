@@ -6,7 +6,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../data/database/app_database.dart';
 import '../../../data/providers/transaction_provider.dart';
+import '../../dashboard/providers/dashboard_provider.dart';
 import '../providers/category_list_provider.dart';
+import '../providers/recent_transactions_provider.dart';
 import '../providers/transaction_details_provider.dart';
 import '../providers/transaction_list_provider.dart';
 import '../providers/payment_method_list_provider.dart';
@@ -142,6 +144,8 @@ class _AddTransactionScreenState extends ConsumerState<AddTransactionScreen> {
 
     if (mounted) {
       ref.invalidate(transactionsProvider);
+      ref.invalidate(dashboardProvider);
+      ref.invalidate(recentTransactionsProvider);
 
       if (widget.transactionId != null) {
         ref.invalidate(transactionDetailsProvider(widget.transactionId!));
