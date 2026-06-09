@@ -6,10 +6,15 @@ import 'package:uuid/uuid.dart';
 
 import '../../../data/database/app_database.dart';
 import '../../../data/providers/goal_provider.dart';
+import '../providers/active_goals_provider.dart';
+import '../providers/completed_goals_provider.dart';
+import '../providers/goal_dashboard_provider.dart';
 import '../providers/goals_provider.dart';
 
 class AddGoalScreen extends ConsumerStatefulWidget {
-  const AddGoalScreen({super.key});
+  final String? goalId;
+
+  const AddGoalScreen({super.key, this.goalId});
 
   @override
   ConsumerState<AddGoalScreen> createState() => _AddGoalScreenState();
@@ -45,6 +50,9 @@ class _AddGoalScreenState extends ConsumerState<AddGoalScreen> {
     );
 
     ref.invalidate(goalsProvider);
+    ref.invalidate(activeGoalsProvider);
+    ref.invalidate(completedGoalsProvider);
+    ref.invalidate(goalDashboardProvider);
 
     if (mounted) {
       context.pop();
