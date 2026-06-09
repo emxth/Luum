@@ -22,6 +22,7 @@ final goalDetailsProvider = FutureProvider.family((ref, String goalId) async {
     goal: goal,
     balance: balance,
     remaining: remaining,
-    progress: progress,
+    progress: progress > 1 ? 1 : progress,
+    isCompleted: balance >= goal.targetAmount,
   );
 });
