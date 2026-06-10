@@ -71,13 +71,6 @@ class GoalDetailsScreen extends ConsumerWidget {
                   error: (e, _) => Text(e.toString()),
                 ),
               ),
-
-              ElevatedButton(
-                onPressed: () {
-                  context.push('/goals/$goalId/contribute');
-                },
-                child: const Text('Add Contribution'),
-              ),
             ],
           );
         },
