@@ -61,6 +61,13 @@ final router = GoRouter(
     GoRoute(path: '/goals/add', builder: (_, _) => const AddGoalScreen()),
 
     GoRoute(
+      path: '/goals/edit/:id',
+      builder: (context, state) {
+        return AddGoalScreen(goalId: state.pathParameters['id']);
+      },
+    ),
+
+    GoRoute(
       path: '/goals/details/:id',
       builder: (context, state) {
         return GoalDetailsScreen(goalId: state.pathParameters['id']!);
