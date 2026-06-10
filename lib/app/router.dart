@@ -4,6 +4,7 @@ import '../features/goals/presentation/add_goal_contribution_screen.dart';
 import '../features/goals/presentation/add_goal_screen.dart';
 import '../features/goals/presentation/goal_details_screen.dart';
 import '../features/goals/presentation/goals_screen.dart';
+import '../features/loans/presentation/add_loan_payment_screen.dart';
 import '../features/loans/presentation/add_loan_screen.dart';
 import '../features/loans/presentation/loan_details_screen.dart';
 import '../features/loans/presentation/loans_screen.dart';
@@ -110,6 +111,13 @@ final router = GoRouter(
       path: '/loans/details/:id',
       builder: (context, state) {
         return LoanDetailsScreen(loanId: state.pathParameters['id']!);
+      },
+    ),
+
+    GoRoute(
+      path: '/loans/:id/payment',
+      builder: (context, state) {
+        return AddLoanPaymentScreen(loanId: state.pathParameters['id']!);
       },
     ),
   ],
