@@ -4,6 +4,9 @@ import '../features/goals/presentation/add_goal_contribution_screen.dart';
 import '../features/goals/presentation/add_goal_screen.dart';
 import '../features/goals/presentation/goal_details_screen.dart';
 import '../features/goals/presentation/goals_screen.dart';
+import '../features/loans/presentation/add_loan_screen.dart';
+import '../features/loans/presentation/loan_details_screen.dart';
+import '../features/loans/presentation/loans_screen.dart';
 import '../features/transactions/presentation/add_transaction_screen.dart';
 import '../features/transactions/presentation/transaction_list_screen.dart';
 import '../features/transactions/presentation/transaction_details_screen.dart';
@@ -78,6 +81,35 @@ final router = GoRouter(
       path: '/goals/:id/contribute',
       builder: (context, state) {
         return AddGoalContributionScreen(goalId: state.pathParameters['id']!);
+      },
+    ),
+
+    // Loan routes
+    GoRoute(
+      path: '/loans',
+      builder: (context, state) {
+        return const LoansScreen();
+      },
+    ),
+
+    GoRoute(
+      path: '/loans/add',
+      builder: (context, state) {
+        return const AddLoanScreen();
+      },
+    ),
+
+    GoRoute(
+      path: '/loans/edit/:id',
+      builder: (context, state) {
+        return AddLoanScreen(loanId: state.pathParameters['id']);
+      },
+    ),
+
+    GoRoute(
+      path: '/loans/details/:id',
+      builder: (context, state) {
+        return LoanDetailsScreen(loanId: state.pathParameters['id']!);
       },
     ),
   ],
