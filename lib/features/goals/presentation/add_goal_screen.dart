@@ -24,6 +24,7 @@ class _AddGoalScreenState extends ConsumerState<AddGoalScreen> {
   final nameController = TextEditingController();
   final targetController = TextEditingController();
   final noteController = TextEditingController();
+  bool _isLoading = true;
 
   Future<void> saveGoal() async {
     final repository = ref.read(goalRepositoryProvider);
@@ -38,16 +39,33 @@ class _AddGoalScreenState extends ConsumerState<AddGoalScreen> {
 
     final now = DateTime.now().toIso8601String();
 
-    await repository.createGoal(
-      GoalsCompanion.insert(
-        id: const Uuid().v4(),
-        name: nameController.text,
-        targetAmount: targetAmount,
-        note: Value(noteController.text.isEmpty ? null : noteController.text),
-        createdAt: now,
-        updatedAt: now,
-      ),
-    );
+    if (widget.goalId != null) {
+      final existingGoal = await repository.getGoalById(widget.goalId!);
+
+      if (existingGoal != null) {
+        await repository.updateGoal(
+          existingGoal.copyWith(
+            name: nameController.text,
+            targetAmount: targetAmount,
+            note: Value(
+              noteController.text.isEmpty ? null : noteController.text,
+            ),
+            updatedAt: now,
+          ),
+        );
+      }
+    } else {
+      await repository.createGoal(
+        GoalsCompanion.insert(
+          id: const Uuid().v4(),
+          name: nameController.text,
+          targetAmount: targetAmount,
+          note: Value(noteController.text.isEmpty ? null : noteController.text),
+          createdAt: now,
+          updatedAt: now,
+        ),
+      );
+    }
 
     ref.invalidate(goalsProvider);
     ref.invalidate(activeGoalsProvider);
@@ -56,6 +74,35 @@ class _AddGoalScreenState extends ConsumerState<AddGoalScreen> {
 
     if (mounted) {
       context.pop();
+    }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+
+    if (widget.goalId != null) {
+      _loadGoal();
+    } else {
+      _isLoading = false;
+    }
+  }
+
+  Future<void> _loadGoal() async {
+    final repository = ref.read(goalRepositoryProvider);
+
+    final goal = await repository.getGoalById(widget.goalId!);
+
+    if (goal != null && mounted) {
+      setState(() {
+        nameController.text = goal.name;
+
+        targetController.text = goal.targetAmount.toString();
+
+        noteController.text = goal.note ?? '';
+
+        _isLoading = false;
+      });
     }
   }
 
@@ -70,8 +117,17 @@ class _AddGoalScreenState extends ConsumerState<AddGoalScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final isEditing = widget.goalId != null;
+
+    if (_isLoading) {
+      return Scaffold(
+        appBar: AppBar(title: const Text('Loading')),
+        body: const Center(child: CircularProgressIndicator()),
+      );
+    }
+
     return Scaffold(
-      appBar: AppBar(title: const Text('Add Goal')),
+      appBar: AppBar(title: Text(isEditing ? 'Edit Goal' : 'Add Goal')),
       body: Padding(
         padding: const EdgeInsets.all(16),
         child: Column(
@@ -92,7 +148,10 @@ class _AddGoalScreenState extends ConsumerState<AddGoalScreen> {
               decoration: const InputDecoration(labelText: 'Note'),
             ),
 
-            ElevatedButton(onPressed: saveGoal, child: const Text('Save Goal')),
+            ElevatedButton(
+              onPressed: saveGoal,
+              child: Text(isEditing ? 'Update Goal' : 'Save Goal'),
+            ),
           ],
         ),
       ),
