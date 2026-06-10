@@ -29,121 +29,125 @@ class DashboardScreen extends ConsumerWidget {
       data: (_) {
         return Scaffold(
           appBar: AppBar(title: const Text('Luum')),
-          body: Column(
-            children: [
-              dashboard.when(
-                data: (summary) {
-                  return Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text('Balance: Rs. ${summary.balance}'),
+          body: SingleChildScrollView(
+            padding: const EdgeInsets.all(16),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                dashboard.when(
+                  data: (summary) {
+                    return Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text('Balance: Rs. ${summary.balance}'),
 
-                      Text('Income: Rs. ${summary.totalIncome}'),
+                        Text('Income: Rs. ${summary.totalIncome}'),
 
-                      Text('Expense: Rs. ${summary.totalExpense}'),
+                        Text('Expense: Rs. ${summary.totalExpense}'),
 
-                      const Divider(),
+                        const Divider(),
 
-                      Text('This Month Income: Rs. ${summary.monthIncome}'),
+                        Text('This Month Income: Rs. ${summary.monthIncome}'),
 
-                      Text('This Month Expense: Rs. ${summary.monthExpense}'),
+                        Text('This Month Expense: Rs. ${summary.monthExpense}'),
 
-                      Text('This Month Balance: Rs. ${summary.monthBalance}'),
-                    ],
-                  );
-                },
-                loading: () => const CircularProgressIndicator(),
-                error: (e, _) => Text(e.toString()),
-              ),
+                        Text('This Month Balance: Rs. ${summary.monthBalance}'),
+                      ],
+                    );
+                  },
+                  loading: () => const CircularProgressIndicator(),
+                  error: (e, _) => Text(e.toString()),
+                ),
 
-              recent.when(
-                data: (items) {
-                  return Column(
-                    children: [
-                      const Text('Recent Transactions'),
+                recent.when(
+                  data: (items) {
+                    return Column(
+                      children: [
+                        const Text('Recent Transactions'),
 
-                      ...items.map((transaction) {
-                        return ListTile(
-                          title: Text(transaction.type),
-                          subtitle: Text('Rs. ${transaction.amount}'),
-                        );
-                      }),
-                    ],
-                  );
-                },
-                loading: () => const CircularProgressIndicator(),
-                error: (e, _) => Text(e.toString()),
-              ),
+                        ...items.map((transaction) {
+                          return ListTile(
+                            title: Text(transaction.type),
+                            subtitle: Text('Rs. ${transaction.amount}'),
+                          );
+                        }),
+                      ],
+                    );
+                  },
+                  loading: () => const CircularProgressIndicator(),
+                  error: (e, _) => Text(e.toString()),
+                ),
 
-              goalSummary.when(
-                data: (summary) {
-                  return Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      const Text('Goals Summary'),
+                goalSummary.when(
+                  data: (summary) {
+                    return Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const Text('Goals Summary'),
 
-                      Text('Goals: ${summary.totalGoals}'),
+                        Text('Goals: ${summary.totalGoals}'),
 
-                      Text('Active: ${summary.activeGoals}'),
+                        Text('Active: ${summary.activeGoals}'),
 
-                      Text('Completed: ${summary.completedGoals}'),
+                        Text('Completed: ${summary.completedGoals}'),
 
-                      Text('Saved: Rs. ${summary.totalSaved}'),
-                    ],
-                  );
-                },
-                loading: () => const CircularProgressIndicator(),
-                error: (e, _) => Text(e.toString()),
-              ),
+                        Text('Saved: Rs. ${summary.totalSaved}'),
+                      ],
+                    );
+                  },
+                  loading: () => const CircularProgressIndicator(),
+                  error: (e, _) => Text(e.toString()),
+                ),
 
-              activeGoals.when(
-                data: (goals) {
-                  return Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      const Text('Active Goals'),
+                activeGoals.when(
+                  data: (goals) {
+                    return Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const Text('Active Goals'),
 
-                      ...goals.take(3).map((goal) {
-                        return ListTile(
-                          title: Text(goal.name),
-                          subtitle: Text('Target: Rs. ${goal.targetAmount}'),
-                        );
-                      }),
-                    ],
-                  );
-                },
-                loading: () => const CircularProgressIndicator(),
-                error: (e, _) => Text(e.toString()),
-              ),
+                        ...goals.take(3).map((goal) {
+                          return ListTile(
+                            title: Text(goal.name),
+                            subtitle: Text('Target: Rs. ${goal.targetAmount}'),
+                          );
+                        }),
+                      ],
+                    );
+                  },
+                  loading: () => const CircularProgressIndicator(),
+                  error: (e, _) => Text(e.toString()),
+                ),
 
-              ElevatedButton(
-                onPressed: () {
-                  context.push('/transactions/add/expense');
-                },
-                child: const Text('Add Expense'),
-              ),
+                ElevatedButton(
+                  onPressed: () {
+                    context.push('/transactions/add/expense');
+                  },
+                  child: const Text('Add Expense'),
+                ),
 
-              ElevatedButton(
-                onPressed: () {
-                  context.push('/transactions/add/income');
-                },
-                child: const Text('Add Income'),
-              ),
+                ElevatedButton(
+                  onPressed: () {
+                    context.push('/transactions/add/income');
+                  },
+                  child: const Text('Add Income'),
+                ),
 
-              ElevatedButton(
-                onPressed: () {
-                  context.push('/transactions');
-                },
-                child: const Text('View Transactions'),
-              ),
+                ElevatedButton(
+                  onPressed: () {
+                    context.push('/transactions');
+                  },
+                  child: const Text('View Transactions'),
+                ),
 
-              ElevatedButton(
-                onPressed: () {
-                  context.push('/goals');
-                },
-                child: const Text('Goals'),
-              ),
-            ],
+                ElevatedButton(
+                  onPressed: () {
+                    context.push('/goals');
+                  },
+                  child: const Text('Goals'),
+                ),
+              ],
+            ),
           ),
         );
       },
