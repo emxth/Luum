@@ -30,4 +30,62 @@ class LoanRepository {
   Future<void> deleteLoan(String id) async {
     await (database.delete(database.loans)..where((t) => t.id.equals(id))).go();
   }
+
+  Future<void> addPayment(LoanPaymentsCompanion payment) async {
+    await database.into(database.loanPayments).insert(payment);
+  }
+
+  Future<List<LoanPayment>> getPayments(String loanId) {
+    return (database.select(database.loanPayments)
+          ..where((t) => t.loanId.equals(loanId))
+          ..orderBy([(t) => OrderingTerm.desc(t.paymentDate)]))
+        .get();
+  }
+
+  Future<double> getTotalPaid(String loanId) async {
+    final payments = await getPayments(loanId);
+
+    return payments.fold<double>(0.0, (sum, item) => sum + item.amount);
+  }
+
+  Future<double> getRemainingBalance(String loanId) async {
+    final loan = await getLoanById(loanId);
+
+    if (loan == null) {
+      return 0;
+    }
+
+    final paid = await getTotalPaid(loanId);
+
+    return loan.amount - paid;
+  }
+
+  Future<void> updateLoanStatus(String loanId) async {
+    final loan = await getLoanById(loanId);
+
+    if (loan == null) {
+      return;
+    }
+
+    final paid = await getTotalPaid(loanId);
+
+    String status;
+
+    if (paid <= 0) {
+      status = 'pending';
+    } else if (paid < loan.amount) {
+      status = 'partial';
+    } else {
+      status = 'completed';
+    }
+
+    await (database.update(
+      database.loans,
+    )..where((t) => t.id.equals(loanId))).write(
+      LoansCompanion(
+        status: Value(status),
+        updatedAt: Value(DateTime.now().toIso8601String()),
+      ),
+    );
+  }
 }
