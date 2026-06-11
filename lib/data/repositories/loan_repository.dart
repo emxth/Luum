@@ -88,4 +88,59 @@ class LoanRepository {
       ),
     );
   }
+
+  Future<double> getTotalReceivable() async {
+    final loans = await getAllLoans();
+
+    double total = 0;
+
+    for (final loan in loans) {
+      if (loan.loanType != 'receivable') {
+        continue;
+      }
+
+      final remaining = await getRemainingBalance(loan.id);
+
+      total += remaining;
+    }
+
+    return total;
+  }
+
+  Future<double> getTotalPayable() async {
+    final loans = await getAllLoans();
+
+    double total = 0;
+
+    for (final loan in loans) {
+      if (loan.loanType != 'payable') {
+        continue;
+      }
+
+      final remaining = await getRemainingBalance(loan.id);
+
+      total += remaining;
+    }
+
+    return total;
+  }
+
+  Future<int> getPendingLoanCount() async {
+    final loans = await getAllLoans();
+
+    return loans.where((loan) => loan.status != 'completed').length;
+  }
+
+  Future<int> getCompletedLoanCount() async {
+    final loans = await getAllLoans();
+
+    return loans.where((loan) => loan.status == 'completed').length;
+  }
+
+  Future<List<LoanPayment>> getRecentPayments() {
+    return (database.select(database.loanPayments)
+          ..orderBy([(t) => OrderingTerm.desc(t.paymentDate)])
+          ..limit(10))
+        .get();
+  }
 }
