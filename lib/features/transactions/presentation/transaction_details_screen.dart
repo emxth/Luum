@@ -3,6 +3,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../dashboard/providers/dashboard_provider.dart';
+import '../../settings/providers/budget_summary_provider.dart';
+import '../../settings/providers/monthly_usage_provider.dart';
 import '../providers/recent_transactions_provider.dart';
 import '../providers/transaction_details_provider.dart';
 
@@ -39,8 +41,14 @@ class TransactionDetailsScreen extends ConsumerWidget {
 
                   if (updated == true) {
                     ref.invalidate(transactionDetailsProvider(transactionId));
+
                     ref.invalidate(dashboardProvider);
+
                     ref.invalidate(recentTransactionsProvider);
+
+                    ref.invalidate(budgetSummaryProvider);
+                    
+                    ref.invalidate(monthlyUsageProvider);
                   }
                 },
                 child: const Text('Edit'),

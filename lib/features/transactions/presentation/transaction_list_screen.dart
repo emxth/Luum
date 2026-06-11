@@ -4,6 +4,8 @@ import 'package:go_router/go_router.dart';
 
 import '../../../features/transactions/providers/transaction_list_provider.dart';
 import '../../../data/providers/transaction_provider.dart';
+import '../../settings/providers/budget_summary_provider.dart';
+import '../../settings/providers/monthly_usage_provider.dart';
 
 class TransactionListScreen extends ConsumerWidget {
   const TransactionListScreen({super.key});
@@ -32,6 +34,10 @@ class TransactionListScreen extends ConsumerWidget {
                         .deleteTransaction(transaction.id);
 
                     ref.invalidate(transactionsProvider);
+
+                    ref.invalidate(budgetSummaryProvider);
+
+                    ref.invalidate(monthlyUsageProvider);
                   },
                 ),
                 onTap: () {
