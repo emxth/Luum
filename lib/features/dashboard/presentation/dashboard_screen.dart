@@ -5,6 +5,7 @@ import 'package:go_router/go_router.dart';
 import '../../../data/providers/startup_provider.dart';
 import '../../goals/providers/active_goals_provider.dart';
 import '../../goals/providers/goal_dashboard_provider.dart';
+import '../../loans/providers/loan_dashboard_provider.dart';
 import '../../transactions/providers/recent_transactions_provider.dart';
 import '../providers/dashboard_provider.dart';
 
@@ -18,6 +19,7 @@ class DashboardScreen extends ConsumerWidget {
     final recent = ref.watch(recentTransactionsProvider);
     final goalSummary = ref.watch(goalDashboardProvider);
     final activeGoals = ref.watch(activeGoalsProvider);
+    final loanDashboard = ref.watch(loanDashboardProvider);
 
     return startup.when(
       loading: () {
@@ -113,6 +115,26 @@ class DashboardScreen extends ConsumerWidget {
                           );
                         }),
                       ],
+                    );
+                  },
+                  loading: () => const CircularProgressIndicator(),
+                  error: (e, _) => Text(e.toString()),
+                ),
+
+                loanDashboard.when(
+                  data: (data) {
+                    return Card(
+                      child: Column(
+                        children: [
+                          const Text('Loans'),
+
+                          Text('Receivable: Rs. ${data.totalReceivable}'),
+
+                          Text('Payable: Rs. ${data.totalPayable}'),
+
+                          Text('Pending Loans: ${data.pendingLoans}'),
+                        ],
+                      ),
                     );
                   },
                   loading: () => const CircularProgressIndicator(),
