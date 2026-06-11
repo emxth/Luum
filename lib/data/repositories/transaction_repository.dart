@@ -59,38 +59,44 @@ class TransactionRepository {
   Future<double> getCurrentMonthIncome() async {
     final now = DateTime.now();
 
-    final rows = await database.select(database.transactions).get();
+    final start = DateTime(now.year, now.month, 1);
 
-    return rows
-        .where((t) {
-          final date = DateTime.parse(t.date);
+    final end = DateTime(now.year, now.month + 1, 1);
 
-          return t.type == 'income' &&
-              date.year == now.year &&
-              date.month == now.month;
-        })
-        .fold<double>(0.0, (sum, t) => sum + t.amount);
+    final transactions =
+        await (database.select(database.transactions)..where(
+              (t) =>
+                  t.type.equals('income') &
+                  t.date.isBiggerOrEqualValue(start.toIso8601String()) &
+                  t.date.isSmallerThanValue(end.toIso8601String()),
+            ))
+            .get();
+
+    return transactions.fold<double>(0.0, (sum, item) => sum + item.amount);
   }
 
-  Future<double> getCurrentMonthExpense() async {
+  Future<double> getCurrentMonthExpenses() async {
     final now = DateTime.now();
 
-    final rows = await database.select(database.transactions).get();
+    final start = DateTime(now.year, now.month, 1);
 
-    return rows
-        .where((t) {
-          final date = DateTime.parse(t.date);
+    final end = DateTime(now.year, now.month + 1, 1);
 
-          return t.type == 'expense' &&
-              date.year == now.year &&
-              date.month == now.month;
-        })
-        .fold<double>(0.0, (sum, t) => sum + t.amount);
+    final transactions =
+        await (database.select(database.transactions)..where(
+              (t) =>
+                  t.type.equals('expense') &
+                  t.date.isBiggerOrEqualValue(start.toIso8601String()) &
+                  t.date.isSmallerThanValue(end.toIso8601String()),
+            ))
+            .get();
+
+    return transactions.fold<double>(0.0, (sum, item) => sum + item.amount);
   }
 
   Future<double> getCurrentMonthBalance() async {
     final monthIncome = await getCurrentMonthIncome();
-    final monthExpense = await getCurrentMonthExpense();
+    final monthExpense = await getCurrentMonthExpenses();
 
     return monthIncome - monthExpense;
   }
