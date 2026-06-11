@@ -14,7 +14,7 @@ final dashboardProvider = FutureProvider((ref) async {
 
   final monthIncome = await repository.getCurrentMonthIncome();
 
-  final monthExpense = await repository.getCurrentMonthExpense();
+  final monthExpense = await repository.getCurrentMonthExpenses();
 
   final monthBalance = await repository.getCurrentMonthBalance();
 
