@@ -12,6 +12,7 @@ import '../providers/loan_payments_provider.dart';
 import '../providers/loans_provider.dart';
 import '../providers/pending_payables_provider.dart';
 import '../providers/pending_receivables_provider.dart';
+import '../providers/recentLoan_activity_provider.dart';
 
 class AddLoanPaymentScreen extends ConsumerStatefulWidget {
   final String loanId;
@@ -63,6 +64,8 @@ class _AddLoanPaymentScreenState extends ConsumerState<AddLoanPaymentScreen> {
     ref.invalidate(pendingReceivablesProvider);
 
     ref.invalidate(pendingPayablesProvider);
+
+    ref.invalidate(recentLoanActivityProvider);
 
     if (mounted) {
       context.pop();
