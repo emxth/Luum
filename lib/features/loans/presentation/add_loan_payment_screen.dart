@@ -6,8 +6,12 @@ import 'package:uuid/uuid.dart';
 
 import '../../../data/database/app_database.dart';
 import '../../../data/providers/loan_provider.dart';
+import '../providers/loan_dashboard_provider.dart';
 import '../providers/loan_summary_provider.dart';
 import '../providers/loan_payments_provider.dart';
+import '../providers/loans_provider.dart';
+import '../providers/pending_payables_provider.dart';
+import '../providers/pending_receivables_provider.dart';
 
 class AddLoanPaymentScreen extends ConsumerStatefulWidget {
   final String loanId;
@@ -51,6 +55,14 @@ class _AddLoanPaymentScreenState extends ConsumerState<AddLoanPaymentScreen> {
     ref.invalidate(loanSummaryProvider(widget.loanId));
 
     ref.invalidate(loanPaymentsProvider(widget.loanId));
+
+    ref.invalidate(loansProvider);
+
+    ref.invalidate(loanDashboardProvider);
+
+    ref.invalidate(pendingReceivablesProvider);
+
+    ref.invalidate(pendingPayablesProvider);
 
     if (mounted) {
       context.pop();
