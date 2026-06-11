@@ -7,6 +7,7 @@ import '../providers/loans_provider.dart';
 import '../../../data/providers/loan_provider.dart';
 import '../providers/pending_payables_provider.dart';
 import '../providers/pending_receivables_provider.dart';
+import '../providers/recentLoan_activity_provider.dart';
 
 class LoansScreen extends ConsumerWidget {
   const LoansScreen({super.key});
@@ -14,9 +15,6 @@ class LoansScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final loans = ref.watch(loansProvider);
-    final recentLoanActivityProvider = FutureProvider((ref) {
-      return ref.read(loanRepositoryProvider).getRecentPayments();
-    });
 
     return Scaffold(
       appBar: AppBar(title: const Text('Loans')),
