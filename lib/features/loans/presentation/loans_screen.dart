@@ -2,8 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
+import '../providers/loan_dashboard_provider.dart';
 import '../providers/loans_provider.dart';
 import '../../../data/providers/loan_provider.dart';
+import '../providers/pending_payables_provider.dart';
+import '../providers/pending_receivables_provider.dart';
 
 class LoansScreen extends ConsumerWidget {
   const LoansScreen({super.key});
@@ -11,13 +14,60 @@ class LoansScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final loans = ref.watch(loansProvider);
+    final recentLoanActivityProvider = FutureProvider((ref) {
+      return ref.read(loanRepositoryProvider).getRecentPayments();
+    });
 
     return Scaffold(
       appBar: AppBar(title: const Text('Loans')),
       body: loans.when(
         data: (items) {
+          final dashboard = ref.watch(loanDashboardProvider);
+          final recent = ref.watch(recentLoanActivityProvider);
+
           return Column(
             children: [
+              dashboard.when(
+                data: (data) {
+                  return Column(
+                    children: [
+                      Text('Receivable: Rs. ${data.totalReceivable}'),
+
+                      Text('Payable: Rs. ${data.totalPayable}'),
+
+                      Text('Pending: ${data.pendingLoans}'),
+
+                      Text('Completed: ${data.completedLoans}'),
+
+                      const Divider(),
+
+                      const Text('Recent Activity'),
+                    ],
+                  );
+                },
+                loading: () => const CircularProgressIndicator(),
+                error: (e, _) => Text(e.toString()),
+              ),
+
+              recent.when(
+                data: (items) {
+                  return ListView.builder(
+                    shrinkWrap: true,
+                    itemCount: items.length,
+                    itemBuilder: (context, index) {
+                      final item = items[index];
+
+                      return ListTile(
+                        title: Text('Rs. ${item.amount}'),
+                        subtitle: Text(item.paymentDate),
+                      );
+                    },
+                  );
+                },
+                loading: () => const CircularProgressIndicator(),
+                error: (e, _) => Text(e.toString()),
+              ),
+
               ElevatedButton(
                 onPressed: () {
                   context.push('/loans/add');
@@ -50,6 +100,14 @@ class LoansScreen extends ConsumerWidget {
                               .deleteLoan(loan.id);
 
                           ref.invalidate(loansProvider);
+
+                          ref.invalidate(loanDashboardProvider);
+
+                          ref.invalidate(pendingReceivablesProvider);
+
+                          ref.invalidate(pendingPayablesProvider);
+
+                          ref.invalidate(recentLoanActivityProvider);
                         },
                       ),
 
