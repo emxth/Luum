@@ -7,6 +7,8 @@ import '../../goals/providers/active_goals_provider.dart';
 import '../../goals/providers/goal_dashboard_provider.dart';
 import '../../loans/providers/loan_dashboard_provider.dart';
 import '../../settings/providers/budget_summary_provider.dart';
+import '../../settings/providers/monthly_usage_provider.dart';
+import '../../settings/widgets/current_month_usage_card.dart';
 import '../../transactions/providers/recent_transactions_provider.dart';
 import '../providers/dashboard_provider.dart';
 
@@ -21,7 +23,8 @@ class DashboardScreen extends ConsumerWidget {
     final goalSummary = ref.watch(goalDashboardProvider);
     final activeGoals = ref.watch(activeGoalsProvider);
     final loanDashboard = ref.watch(loanDashboardProvider);
-    final budget = ref.watch(budgetSummaryProvider); // !Temporary for testing
+    final budget = ref.watch(budgetSummaryProvider);
+    final monthlyUsage = ref.watch(monthlyUsageProvider);
 
     return startup.when(
       loading: () {
@@ -143,19 +146,11 @@ class DashboardScreen extends ConsumerWidget {
                   error: (e, _) => Text(e.toString()),
                 ),
 
-                // !Temporary for testing
-                budget.when(
+                monthlyUsage.when(
                   data: (data) {
-                    return Column(
-                      children: [
-                        Text('Limit: Rs. ${data.monthlyLimit}'),
-
-                        Text('Spent: Rs. ${data.spent}'),
-
-                        Text('Remaining: Rs. ${data.remaining}'),
-
-                        LinearProgressIndicator(value: data.progress),
-                      ],
+                    return CurrentMonthUsageCard(
+                      income: data.income,
+                      expense: data.expense,
                     );
                   },
                   loading: () => const CircularProgressIndicator(),
