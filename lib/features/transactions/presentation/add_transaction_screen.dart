@@ -7,6 +7,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../data/database/app_database.dart';
 import '../../../data/providers/transaction_provider.dart';
 import '../../dashboard/providers/dashboard_provider.dart';
+import '../../settings/providers/budget_notification_provider.dart';
 import '../../settings/providers/budget_summary_provider.dart';
 import '../../settings/providers/monthly_usage_provider.dart';
 import '../providers/category_list_provider.dart';
@@ -144,13 +145,17 @@ class _AddTransactionScreenState extends ConsumerState<AddTransactionScreen> {
       );
     }
 
+    if (_transactionType == 'expense') {
+      await ref.read(budgetNotificationServiceProvider).checkThresholds();
+    }
+
     if (mounted) {
       ref.invalidate(transactionsProvider);
 
       ref.invalidate(dashboardProvider);
 
       ref.invalidate(recentTransactionsProvider);
-      
+
       ref.invalidate(budgetSummaryProvider);
 
       ref.invalidate(monthlyUsageProvider);
