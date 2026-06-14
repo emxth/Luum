@@ -23,7 +23,6 @@ class DashboardScreen extends ConsumerWidget {
     final goalSummary = ref.watch(goalDashboardProvider);
     final activeGoals = ref.watch(activeGoalsProvider);
     final loanDashboard = ref.watch(loanDashboardProvider);
-    final budget = ref.watch(budgetSummaryProvider);
     final monthlyUsage = ref.watch(monthlyUsageProvider);
 
     return startup.when(
