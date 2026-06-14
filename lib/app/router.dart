@@ -8,6 +8,7 @@ import '../features/loans/presentation/add_loan_payment_screen.dart';
 import '../features/loans/presentation/add_loan_screen.dart';
 import '../features/loans/presentation/loan_details_screen.dart';
 import '../features/loans/presentation/loans_screen.dart';
+import '../features/settings/presentation/settings_screen.dart';
 import '../features/transactions/presentation/add_transaction_screen.dart';
 import '../features/transactions/presentation/transaction_list_screen.dart';
 import '../features/transactions/presentation/transaction_details_screen.dart';
@@ -118,6 +119,14 @@ final router = GoRouter(
       path: '/loans/:id/payment',
       builder: (context, state) {
         return AddLoanPaymentScreen(loanId: state.pathParameters['id']!);
+      },
+    ),
+
+    // Settings route
+    GoRoute(
+      path: '/settings',
+      builder: (context, state) {
+        return const SettingsScreen();
       },
     ),
   ],
