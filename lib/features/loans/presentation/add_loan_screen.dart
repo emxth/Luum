@@ -10,7 +10,7 @@ import '../providers/loan_dashboard_provider.dart';
 import '../providers/loans_provider.dart';
 import '../providers/pending_payables_provider.dart';
 import '../providers/pending_receivables_provider.dart';
-import '../providers/recentLoan_activity_provider.dart';
+import '../providers/recent_loan_activity_provider.dart';
 
 class AddLoanScreen extends ConsumerStatefulWidget {
   final String? loanId;

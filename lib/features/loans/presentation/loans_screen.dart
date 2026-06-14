@@ -7,7 +7,7 @@ import '../providers/loans_provider.dart';
 import '../../../data/providers/loan_provider.dart';
 import '../providers/pending_payables_provider.dart';
 import '../providers/pending_receivables_provider.dart';
-import '../providers/recentLoan_activity_provider.dart';
+import '../providers/recent_loan_activity_provider.dart';
 
 class LoansScreen extends ConsumerWidget {
   const LoansScreen({super.key});
