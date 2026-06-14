@@ -6,7 +6,6 @@ import '../../../data/providers/startup_provider.dart';
 import '../../goals/providers/active_goals_provider.dart';
 import '../../goals/providers/goal_dashboard_provider.dart';
 import '../../loans/providers/loan_dashboard_provider.dart';
-import '../../settings/providers/budget_summary_provider.dart';
 import '../../settings/providers/monthly_usage_provider.dart';
 import '../../settings/widgets/current_month_usage_card.dart';
 import '../../transactions/providers/recent_transactions_provider.dart';
