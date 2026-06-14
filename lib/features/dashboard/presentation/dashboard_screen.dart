@@ -6,6 +6,7 @@ import '../../../data/providers/startup_provider.dart';
 import '../../goals/providers/active_goals_provider.dart';
 import '../../goals/providers/goal_dashboard_provider.dart';
 import '../../loans/providers/loan_dashboard_provider.dart';
+import '../../settings/providers/budget_summary_provider.dart';
 import '../../settings/providers/monthly_usage_provider.dart';
 import '../../settings/widgets/current_month_usage_card.dart';
 import '../../transactions/providers/recent_transactions_provider.dart';
@@ -23,6 +24,7 @@ class DashboardScreen extends ConsumerWidget {
     final activeGoals = ref.watch(activeGoalsProvider);
     final loanDashboard = ref.watch(loanDashboardProvider);
     final monthlyUsage = ref.watch(monthlyUsageProvider);
+    final budget = ref.watch(budgetSummaryProvider); // !Temporary for testing
 
     return startup.when(
       loading: () {
@@ -149,6 +151,22 @@ class DashboardScreen extends ConsumerWidget {
                     return CurrentMonthUsageCard(
                       income: data.income,
                       expense: data.expense,
+                    );
+                  },
+                  loading: () => const CircularProgressIndicator(),
+                  error: (e, _) => Text(e.toString()),
+                ),
+
+                // !Temporary for testing
+                budget.when(
+                  data: (data) {
+                    return Column(
+                      children: [
+                        Text('Limit: Rs. ${data.monthlyLimit}'),
+                        Text('Spent: Rs. ${data.spent}'),
+                        Text('Remaining: Rs. ${data.remaining}'),
+                        LinearProgressIndicator(value: data.progress),
+                      ],
                     );
                   },
                   loading: () => const CircularProgressIndicator(),
