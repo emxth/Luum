@@ -3,7 +3,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../database/app_database.dart';
 import '../providers/database_provider.dart';
-import '../repositories/settings_repository.dart';
 import '../services/seed_service.dart';
 import 'settings_provider.dart';
 
@@ -30,5 +29,5 @@ final startupProvider = FutureProvider<void>((ref) async {
 
   await seedService.seed();
 
-  await SettingsRepository.checkMonthChange();
+  await settingsRepo.checkMonthChange();
 });
