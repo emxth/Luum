@@ -13,6 +13,12 @@ class NotificationService {
     const settings = InitializationSettings(android: androidSettings);
 
     await instance.initialize(settings: settings);
+
+    await instance
+        .resolvePlatformSpecificImplementation<
+          AndroidFlutterLocalNotificationsPlugin
+        >()
+        ?.requestNotificationsPermission();
   }
 
   static Future<void> show({
