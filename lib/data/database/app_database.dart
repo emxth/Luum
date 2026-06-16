@@ -28,7 +28,27 @@ class AppDatabase extends _$AppDatabase {
   AppDatabase() : super(openConnection());
 
   @override
-  int get schemaVersion => 1;
+  int get schemaVersion => 2;
+
+  @override
+  MigrationStrategy get migration => MigrationStrategy(
+    onCreate: (migrator) async {
+      await migrator.createAll();
+    },
+    onUpgrade: (migrator, from, to) async {
+      if (from < 2) {
+        await migrator.addColumn(
+          settings,
+          settings.lastAlertSent as GeneratedColumn<Object>,
+        );
+
+        await migrator.addColumn(
+          settings,
+          settings.lastAlertMonth as GeneratedColumn<Object>,
+        );
+      }
+    },
+  );
 
   Future<int> categoryCount() async {
     final result = await select(categories).get();

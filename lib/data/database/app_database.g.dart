@@ -3390,6 +3390,30 @@ class $SettingsTable extends Settings with TableInfo<$SettingsTable, Setting> {
     requiredDuringInsert: false,
     defaultValue: const Constant(100),
   );
+  static const VerificationMeta _lastAlertSentMeta = const VerificationMeta(
+    'lastAlertSent',
+  );
+  @override
+  late final GeneratedColumn<int> lastAlertSent = GeneratedColumn<int>(
+    'last_alert_sent',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+    defaultValue: const Constant(0),
+  );
+  static const VerificationMeta _lastAlertMonthMeta = const VerificationMeta(
+    'lastAlertMonth',
+  );
+  @override
+  late final GeneratedColumn<String> lastAlertMonth = GeneratedColumn<String>(
+    'last_alert_month',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+    defaultValue: Constant(''),
+  );
   static const VerificationMeta _createdAtMeta = const VerificationMeta(
     'createdAt',
   );
@@ -3423,6 +3447,8 @@ class $SettingsTable extends Settings with TableInfo<$SettingsTable, Setting> {
     warningPercentage1,
     warningPercentage2,
     warningPercentage3,
+    lastAlertSent,
+    lastAlertMonth,
     createdAt,
     updatedAt,
   ];
@@ -3513,6 +3539,24 @@ class $SettingsTable extends Settings with TableInfo<$SettingsTable, Setting> {
         ),
       );
     }
+    if (data.containsKey('last_alert_sent')) {
+      context.handle(
+        _lastAlertSentMeta,
+        lastAlertSent.isAcceptableOrUnknown(
+          data['last_alert_sent']!,
+          _lastAlertSentMeta,
+        ),
+      );
+    }
+    if (data.containsKey('last_alert_month')) {
+      context.handle(
+        _lastAlertMonthMeta,
+        lastAlertMonth.isAcceptableOrUnknown(
+          data['last_alert_month']!,
+          _lastAlertMonthMeta,
+        ),
+      );
+    }
     if (data.containsKey('created_at')) {
       context.handle(
         _createdAtMeta,
@@ -3574,6 +3618,14 @@ class $SettingsTable extends Settings with TableInfo<$SettingsTable, Setting> {
         DriftSqlType.int,
         data['${effectivePrefix}warning_percentage3'],
       )!,
+      lastAlertSent: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}last_alert_sent'],
+      )!,
+      lastAlertMonth: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}last_alert_month'],
+      )!,
       createdAt: attachedDatabase.typeMapping.read(
         DriftSqlType.string,
         data['${effectivePrefix}created_at'],
@@ -3601,6 +3653,8 @@ class Setting extends DataClass implements Insertable<Setting> {
   final int warningPercentage1;
   final int warningPercentage2;
   final int warningPercentage3;
+  final int lastAlertSent;
+  final String lastAlertMonth;
   final String createdAt;
   final String updatedAt;
   const Setting({
@@ -3613,6 +3667,8 @@ class Setting extends DataClass implements Insertable<Setting> {
     required this.warningPercentage1,
     required this.warningPercentage2,
     required this.warningPercentage3,
+    required this.lastAlertSent,
+    required this.lastAlertMonth,
     required this.createdAt,
     required this.updatedAt,
   });
@@ -3630,6 +3686,8 @@ class Setting extends DataClass implements Insertable<Setting> {
     map['warning_percentage1'] = Variable<int>(warningPercentage1);
     map['warning_percentage2'] = Variable<int>(warningPercentage2);
     map['warning_percentage3'] = Variable<int>(warningPercentage3);
+    map['last_alert_sent'] = Variable<int>(lastAlertSent);
+    map['last_alert_month'] = Variable<String>(lastAlertMonth);
     map['created_at'] = Variable<String>(createdAt);
     map['updated_at'] = Variable<String>(updatedAt);
     return map;
@@ -3648,6 +3706,8 @@ class Setting extends DataClass implements Insertable<Setting> {
       warningPercentage1: Value(warningPercentage1),
       warningPercentage2: Value(warningPercentage2),
       warningPercentage3: Value(warningPercentage3),
+      lastAlertSent: Value(lastAlertSent),
+      lastAlertMonth: Value(lastAlertMonth),
       createdAt: Value(createdAt),
       updatedAt: Value(updatedAt),
     );
@@ -3670,6 +3730,8 @@ class Setting extends DataClass implements Insertable<Setting> {
       warningPercentage1: serializer.fromJson<int>(json['warningPercentage1']),
       warningPercentage2: serializer.fromJson<int>(json['warningPercentage2']),
       warningPercentage3: serializer.fromJson<int>(json['warningPercentage3']),
+      lastAlertSent: serializer.fromJson<int>(json['lastAlertSent']),
+      lastAlertMonth: serializer.fromJson<String>(json['lastAlertMonth']),
       createdAt: serializer.fromJson<String>(json['createdAt']),
       updatedAt: serializer.fromJson<String>(json['updatedAt']),
     );
@@ -3687,6 +3749,8 @@ class Setting extends DataClass implements Insertable<Setting> {
       'warningPercentage1': serializer.toJson<int>(warningPercentage1),
       'warningPercentage2': serializer.toJson<int>(warningPercentage2),
       'warningPercentage3': serializer.toJson<int>(warningPercentage3),
+      'lastAlertSent': serializer.toJson<int>(lastAlertSent),
+      'lastAlertMonth': serializer.toJson<String>(lastAlertMonth),
       'createdAt': serializer.toJson<String>(createdAt),
       'updatedAt': serializer.toJson<String>(updatedAt),
     };
@@ -3702,6 +3766,8 @@ class Setting extends DataClass implements Insertable<Setting> {
     int? warningPercentage1,
     int? warningPercentage2,
     int? warningPercentage3,
+    int? lastAlertSent,
+    String? lastAlertMonth,
     String? createdAt,
     String? updatedAt,
   }) => Setting(
@@ -3714,6 +3780,8 @@ class Setting extends DataClass implements Insertable<Setting> {
     warningPercentage1: warningPercentage1 ?? this.warningPercentage1,
     warningPercentage2: warningPercentage2 ?? this.warningPercentage2,
     warningPercentage3: warningPercentage3 ?? this.warningPercentage3,
+    lastAlertSent: lastAlertSent ?? this.lastAlertSent,
+    lastAlertMonth: lastAlertMonth ?? this.lastAlertMonth,
     createdAt: createdAt ?? this.createdAt,
     updatedAt: updatedAt ?? this.updatedAt,
   );
@@ -3744,6 +3812,12 @@ class Setting extends DataClass implements Insertable<Setting> {
       warningPercentage3: data.warningPercentage3.present
           ? data.warningPercentage3.value
           : this.warningPercentage3,
+      lastAlertSent: data.lastAlertSent.present
+          ? data.lastAlertSent.value
+          : this.lastAlertSent,
+      lastAlertMonth: data.lastAlertMonth.present
+          ? data.lastAlertMonth.value
+          : this.lastAlertMonth,
       createdAt: data.createdAt.present ? data.createdAt.value : this.createdAt,
       updatedAt: data.updatedAt.present ? data.updatedAt.value : this.updatedAt,
     );
@@ -3761,6 +3835,8 @@ class Setting extends DataClass implements Insertable<Setting> {
           ..write('warningPercentage1: $warningPercentage1, ')
           ..write('warningPercentage2: $warningPercentage2, ')
           ..write('warningPercentage3: $warningPercentage3, ')
+          ..write('lastAlertSent: $lastAlertSent, ')
+          ..write('lastAlertMonth: $lastAlertMonth, ')
           ..write('createdAt: $createdAt, ')
           ..write('updatedAt: $updatedAt')
           ..write(')'))
@@ -3778,6 +3854,8 @@ class Setting extends DataClass implements Insertable<Setting> {
     warningPercentage1,
     warningPercentage2,
     warningPercentage3,
+    lastAlertSent,
+    lastAlertMonth,
     createdAt,
     updatedAt,
   );
@@ -3794,6 +3872,8 @@ class Setting extends DataClass implements Insertable<Setting> {
           other.warningPercentage1 == this.warningPercentage1 &&
           other.warningPercentage2 == this.warningPercentage2 &&
           other.warningPercentage3 == this.warningPercentage3 &&
+          other.lastAlertSent == this.lastAlertSent &&
+          other.lastAlertMonth == this.lastAlertMonth &&
           other.createdAt == this.createdAt &&
           other.updatedAt == this.updatedAt);
 }
@@ -3808,6 +3888,8 @@ class SettingsCompanion extends UpdateCompanion<Setting> {
   final Value<int> warningPercentage1;
   final Value<int> warningPercentage2;
   final Value<int> warningPercentage3;
+  final Value<int> lastAlertSent;
+  final Value<String> lastAlertMonth;
   final Value<String> createdAt;
   final Value<String> updatedAt;
   const SettingsCompanion({
@@ -3820,6 +3902,8 @@ class SettingsCompanion extends UpdateCompanion<Setting> {
     this.warningPercentage1 = const Value.absent(),
     this.warningPercentage2 = const Value.absent(),
     this.warningPercentage3 = const Value.absent(),
+    this.lastAlertSent = const Value.absent(),
+    this.lastAlertMonth = const Value.absent(),
     this.createdAt = const Value.absent(),
     this.updatedAt = const Value.absent(),
   });
@@ -3833,6 +3917,8 @@ class SettingsCompanion extends UpdateCompanion<Setting> {
     this.warningPercentage1 = const Value.absent(),
     this.warningPercentage2 = const Value.absent(),
     this.warningPercentage3 = const Value.absent(),
+    this.lastAlertSent = const Value.absent(),
+    this.lastAlertMonth = const Value.absent(),
     required String createdAt,
     required String updatedAt,
   }) : createdAt = Value(createdAt),
@@ -3847,6 +3933,8 @@ class SettingsCompanion extends UpdateCompanion<Setting> {
     Expression<int>? warningPercentage1,
     Expression<int>? warningPercentage2,
     Expression<int>? warningPercentage3,
+    Expression<int>? lastAlertSent,
+    Expression<String>? lastAlertMonth,
     Expression<String>? createdAt,
     Expression<String>? updatedAt,
   }) {
@@ -3861,6 +3949,8 @@ class SettingsCompanion extends UpdateCompanion<Setting> {
       if (warningPercentage1 != null) 'warning_percentage1': warningPercentage1,
       if (warningPercentage2 != null) 'warning_percentage2': warningPercentage2,
       if (warningPercentage3 != null) 'warning_percentage3': warningPercentage3,
+      if (lastAlertSent != null) 'last_alert_sent': lastAlertSent,
+      if (lastAlertMonth != null) 'last_alert_month': lastAlertMonth,
       if (createdAt != null) 'created_at': createdAt,
       if (updatedAt != null) 'updated_at': updatedAt,
     });
@@ -3876,6 +3966,8 @@ class SettingsCompanion extends UpdateCompanion<Setting> {
     Value<int>? warningPercentage1,
     Value<int>? warningPercentage2,
     Value<int>? warningPercentage3,
+    Value<int>? lastAlertSent,
+    Value<String>? lastAlertMonth,
     Value<String>? createdAt,
     Value<String>? updatedAt,
   }) {
@@ -3889,6 +3981,8 @@ class SettingsCompanion extends UpdateCompanion<Setting> {
       warningPercentage1: warningPercentage1 ?? this.warningPercentage1,
       warningPercentage2: warningPercentage2 ?? this.warningPercentage2,
       warningPercentage3: warningPercentage3 ?? this.warningPercentage3,
+      lastAlertSent: lastAlertSent ?? this.lastAlertSent,
+      lastAlertMonth: lastAlertMonth ?? this.lastAlertMonth,
       createdAt: createdAt ?? this.createdAt,
       updatedAt: updatedAt ?? this.updatedAt,
     );
@@ -3924,6 +4018,12 @@ class SettingsCompanion extends UpdateCompanion<Setting> {
     if (warningPercentage3.present) {
       map['warning_percentage3'] = Variable<int>(warningPercentage3.value);
     }
+    if (lastAlertSent.present) {
+      map['last_alert_sent'] = Variable<int>(lastAlertSent.value);
+    }
+    if (lastAlertMonth.present) {
+      map['last_alert_month'] = Variable<String>(lastAlertMonth.value);
+    }
     if (createdAt.present) {
       map['created_at'] = Variable<String>(createdAt.value);
     }
@@ -3945,6 +4045,8 @@ class SettingsCompanion extends UpdateCompanion<Setting> {
           ..write('warningPercentage1: $warningPercentage1, ')
           ..write('warningPercentage2: $warningPercentage2, ')
           ..write('warningPercentage3: $warningPercentage3, ')
+          ..write('lastAlertSent: $lastAlertSent, ')
+          ..write('lastAlertMonth: $lastAlertMonth, ')
           ..write('createdAt: $createdAt, ')
           ..write('updatedAt: $updatedAt')
           ..write(')'))
@@ -6557,6 +6659,8 @@ typedef $$SettingsTableCreateCompanionBuilder =
       Value<int> warningPercentage1,
       Value<int> warningPercentage2,
       Value<int> warningPercentage3,
+      Value<int> lastAlertSent,
+      Value<String> lastAlertMonth,
       required String createdAt,
       required String updatedAt,
     });
@@ -6571,6 +6675,8 @@ typedef $$SettingsTableUpdateCompanionBuilder =
       Value<int> warningPercentage1,
       Value<int> warningPercentage2,
       Value<int> warningPercentage3,
+      Value<int> lastAlertSent,
+      Value<String> lastAlertMonth,
       Value<String> createdAt,
       Value<String> updatedAt,
     });
@@ -6626,6 +6732,16 @@ class $$SettingsTableFilterComposer
 
   ColumnFilters<int> get warningPercentage3 => $composableBuilder(
     column: $table.warningPercentage3,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get lastAlertSent => $composableBuilder(
+    column: $table.lastAlertSent,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get lastAlertMonth => $composableBuilder(
+    column: $table.lastAlertMonth,
     builder: (column) => ColumnFilters(column),
   );
 
@@ -6694,6 +6810,16 @@ class $$SettingsTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
+  ColumnOrderings<int> get lastAlertSent => $composableBuilder(
+    column: $table.lastAlertSent,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get lastAlertMonth => $composableBuilder(
+    column: $table.lastAlertMonth,
+    builder: (column) => ColumnOrderings(column),
+  );
+
   ColumnOrderings<String> get createdAt => $composableBuilder(
     column: $table.createdAt,
     builder: (column) => ColumnOrderings(column),
@@ -6757,6 +6883,16 @@ class $$SettingsTableAnnotationComposer
     builder: (column) => column,
   );
 
+  GeneratedColumn<int> get lastAlertSent => $composableBuilder(
+    column: $table.lastAlertSent,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get lastAlertMonth => $composableBuilder(
+    column: $table.lastAlertMonth,
+    builder: (column) => column,
+  );
+
   GeneratedColumn<String> get createdAt =>
       $composableBuilder(column: $table.createdAt, builder: (column) => column);
 
@@ -6801,6 +6937,8 @@ class $$SettingsTableTableManager
                 Value<int> warningPercentage1 = const Value.absent(),
                 Value<int> warningPercentage2 = const Value.absent(),
                 Value<int> warningPercentage3 = const Value.absent(),
+                Value<int> lastAlertSent = const Value.absent(),
+                Value<String> lastAlertMonth = const Value.absent(),
                 Value<String> createdAt = const Value.absent(),
                 Value<String> updatedAt = const Value.absent(),
               }) => SettingsCompanion(
@@ -6813,6 +6951,8 @@ class $$SettingsTableTableManager
                 warningPercentage1: warningPercentage1,
                 warningPercentage2: warningPercentage2,
                 warningPercentage3: warningPercentage3,
+                lastAlertSent: lastAlertSent,
+                lastAlertMonth: lastAlertMonth,
                 createdAt: createdAt,
                 updatedAt: updatedAt,
               ),
@@ -6827,6 +6967,8 @@ class $$SettingsTableTableManager
                 Value<int> warningPercentage1 = const Value.absent(),
                 Value<int> warningPercentage2 = const Value.absent(),
                 Value<int> warningPercentage3 = const Value.absent(),
+                Value<int> lastAlertSent = const Value.absent(),
+                Value<String> lastAlertMonth = const Value.absent(),
                 required String createdAt,
                 required String updatedAt,
               }) => SettingsCompanion.insert(
@@ -6839,6 +6981,8 @@ class $$SettingsTableTableManager
                 warningPercentage1: warningPercentage1,
                 warningPercentage2: warningPercentage2,
                 warningPercentage3: warningPercentage3,
+                lastAlertSent: lastAlertSent,
+                lastAlertMonth: lastAlertMonth,
                 createdAt: createdAt,
                 updatedAt: updatedAt,
               ),
