@@ -8,8 +8,7 @@ class Settings extends Table {
   BoolColumn get notificationsEnabled =>
       boolean().withDefault(const Constant(true))();
 
-  BoolColumn get backupEnabled =>
-      boolean().withDefault(const Constant(true))();
+  BoolColumn get backupEnabled => boolean().withDefault(const Constant(true))();
 
   BoolColumn get darkModeEnabled =>
       boolean().withDefault(const Constant(false))();
@@ -25,6 +24,10 @@ class Settings extends Table {
 
   IntColumn get warningPercentage3 =>
       integer().withDefault(const Constant(100))();
+
+  IntColumn get lastAlertSent => integer().withDefault(const Constant(0))();
+
+  TextColumn get lastAlertMonth => text().withDefault(Constant(''))();
 
   TextColumn get createdAt => text()();
 
