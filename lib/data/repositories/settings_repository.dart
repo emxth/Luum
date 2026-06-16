@@ -38,4 +38,36 @@ class SettingsRepository {
       database.settings,
     )..where((tbl) => tbl.id.equals(1))).write(settings);
   }
+
+  Future<void> resetMonthlyAlerts() async {
+    final currentMonth = '${DateTime.now().year}-${DateTime.now().month}';
+
+    await (database.update(
+      database.settings,
+    )..where((tbl) => tbl.id.equals(1))).write(
+      SettingsCompanion(
+        lastAlertSent: const Value(0),
+        lastAlertMonth: Value(currentMonth),
+      ),
+    );
+  }
+
+  Future<void> checkMonthChange() async {
+    final settings = await getSettings();
+
+    if (settings == null) {
+      return;
+    }
+
+    final currentMonth = '${DateTime.now().year}-${DateTime.now().month}';
+
+    if (settings.lastAlertMonth != currentMonth) {
+      await resetMonthlyAlerts();
+    }
+  }
+
+  Future<void> updateLastAlertSent(int value) async {
+    await (database.update(database.settings)..where((tbl) => tbl.id.equals(1)))
+        .write(SettingsCompanion(lastAlertSent: Value(value)));
+  }
 }
