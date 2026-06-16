@@ -7,6 +7,7 @@ import '../../goals/providers/active_goals_provider.dart';
 import '../../goals/providers/goal_dashboard_provider.dart';
 import '../../loans/providers/loan_dashboard_provider.dart';
 import '../../settings/providers/budget_summary_provider.dart';
+import '../../settings/providers/current_month_provider.dart';
 import '../../settings/providers/monthly_usage_provider.dart';
 import '../../settings/widgets/current_month_usage_card.dart';
 import '../../transactions/providers/recent_transactions_provider.dart';
@@ -25,6 +26,7 @@ class DashboardScreen extends ConsumerWidget {
     final loanDashboard = ref.watch(loanDashboardProvider);
     final monthlyUsage = ref.watch(monthlyUsageProvider);
     final budget = ref.watch(budgetSummaryProvider); // !Temporary for testing
+    final month = ref.watch(currentMonthProvider);
 
     return startup.when(
       loading: () {
@@ -53,6 +55,8 @@ class DashboardScreen extends ConsumerWidget {
                         Text('Expense: Rs. ${summary.totalExpense}'),
 
                         const Divider(),
+
+                        Text('Current Month: $month'),
 
                         Text('This Month Income: Rs. ${summary.monthIncome}'),
 
