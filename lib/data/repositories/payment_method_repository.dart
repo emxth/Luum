@@ -5,7 +5,7 @@ class PaymentMethodRepository {
 
   PaymentMethodRepository(this.database);
 
-  Future<List<PaymentMethod>> getAll() {
+  Future<List<PaymentMethod>> getAllPaymentMethods() {
     return database.select(database.paymentMethods).get();
   }
 }
