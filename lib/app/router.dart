@@ -1,5 +1,6 @@
 import 'package:go_router/go_router.dart';
 
+import '../features/backup/presentation/backup_screen.dart';
 import '../features/goals/presentation/add_goal_contribution_screen.dart';
 import '../features/goals/presentation/add_goal_screen.dart';
 import '../features/goals/presentation/goal_details_screen.dart';
@@ -127,6 +128,14 @@ final router = GoRouter(
       path: '/settings',
       builder: (context, state) {
         return const SettingsScreen();
+      },
+    ),
+
+    // Backup route
+    GoRoute(
+      path: '/backup',
+      builder: (context, state) {
+        return const BackupScreen();
       },
     ),
   ],
