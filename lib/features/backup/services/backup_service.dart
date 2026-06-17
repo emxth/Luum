@@ -74,7 +74,13 @@ class BackupService {
       '  ',
     ).convert(backup.toJson());
 
-    final directory = await getApplicationDocumentsDirectory();
+    final root = await getApplicationDocumentsDirectory();
+
+    final backupDir = Directory('${root.path}/Luum Backups');
+
+    if (!await backupDir.exists()) {
+      await backupDir.create(recursive: true);
+    }
 
     final now = DateTime.now();
 
@@ -88,7 +94,7 @@ class BackupService {
         '${now.second.toString().padLeft(2, '0')}'
         '.json';
 
-    final file = File('${directory.path}/$fileName');
+    final file = File('${backupDir.path}/$fileName');
 
     await file.writeAsString(jsonString);
 
