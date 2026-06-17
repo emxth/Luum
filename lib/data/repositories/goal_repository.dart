@@ -11,6 +11,10 @@ class GoalRepository {
     return database.select(database.goals).get();
   }
 
+  Future<List<GoalTransaction>> getAllGoalTransactions() {
+    return database.select(database.goalTransactions).get();
+  }
+
   Future<Goal?> getGoalById(String id) {
     return (database.select(
       database.goals,
