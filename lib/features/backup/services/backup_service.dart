@@ -102,4 +102,52 @@ class BackupService {
   Future<void> shareBackup(File file) async {
     await SharePlus.instance.share(ShareParams(files: [XFile(file.path)]));
   }
+
+  Future<void> runAutoBackup() async {
+    final settings = await settingsRepository.getSettings();
+
+    if (settings == null) {
+      return;
+    }
+
+    if (!settings.backupEnabled) {
+      return;
+    }
+
+    final lastBackupAt = settings.lastBackupAt;
+
+    if (lastBackupAt == null) {
+      await createBackup();
+      return;
+    }
+
+    final lastBackup = DateTime.parse(lastBackupAt);
+
+    final now = DateTime.now();
+
+    final frequency = settings.backupFrequency;
+
+    bool shouldBackup = false;
+
+    switch (frequency) {
+      case 'daily':
+        shouldBackup = now.difference(lastBackup).inDays >= 1;
+        break;
+
+      case 'weekly':
+        shouldBackup = now.difference(lastBackup).inDays >= 7;
+        break;
+
+      case 'monthly':
+        shouldBackup = now.difference(lastBackup).inDays >= 30;
+        break;
+
+      default:
+        shouldBackup = false;
+    }
+
+    if (shouldBackup) {
+      await createBackup();
+    }
+  }
 }
