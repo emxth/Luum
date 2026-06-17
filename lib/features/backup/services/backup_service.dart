@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:path_provider/path_provider.dart';
+import 'package:share_plus/share_plus.dart';
 
 import '../../../data/repositories/category_repository.dart';
 import '../../../data/repositories/payment_method_repository.dart';
@@ -91,6 +92,14 @@ class BackupService {
 
     await file.writeAsString(jsonString);
 
+    await settingsRepository.updateLastBackupDate(
+      DateTime.now().toIso8601String(),
+    );
+
     return file;
+  }
+
+  Future<void> shareBackup(File file) async {
+    await Share.shareXFiles([XFile(file.path)]);
   }
 }
