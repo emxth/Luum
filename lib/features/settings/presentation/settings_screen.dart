@@ -1,6 +1,7 @@
 import 'package:drift/drift.dart' hide Column;
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 
 import '../../../data/database/app_database.dart';
 import '../../../data/providers/settings_provider.dart';
@@ -129,6 +130,14 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                     setState(() {
                       backupEnabled = value;
                     });
+                  },
+                ),
+
+                ListTile(
+                  title: const Text('Backup'),
+                  trailing: const Icon(Icons.chevron_right),
+                  onTap: () {
+                    context.push('/backup');
                   },
                 ),
 
