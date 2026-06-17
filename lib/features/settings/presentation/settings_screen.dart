@@ -5,7 +5,6 @@ import 'package:go_router/go_router.dart';
 
 import '../../../data/database/app_database.dart';
 import '../../../data/providers/settings_provider.dart';
-import '../../backup/providers/backup_provider.dart';
 import '../providers/budget_summary_provider.dart';
 import '../providers/settings_provider.dart';
 
