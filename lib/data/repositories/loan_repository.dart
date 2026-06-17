@@ -17,6 +17,10 @@ class LoanRepository {
     )..orderBy([(t) => OrderingTerm.desc(t.loanDate)])).get();
   }
 
+  Future<List<LoanPayment>> getAllLoanPayments() {
+    return database.select(database.loanPayments).get();
+  }
+
   Future<Loan?> getLoanById(String id) {
     return (database.select(
       database.loans,
