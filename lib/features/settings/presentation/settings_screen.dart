@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../data/database/app_database.dart';
 import '../../../data/providers/settings_provider.dart';
+import '../../backup/providers/backup_provider.dart';
 import '../providers/budget_summary_provider.dart';
 import '../providers/settings_provider.dart';
 
@@ -166,6 +167,24 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                 ElevatedButton(
                   onPressed: saveSettings,
                   child: const Text('Save Settings'),
+                ),
+
+                // !Temporary
+                ElevatedButton(
+                  onPressed: () async {
+                    final file = await ref
+                        .read(backupServiceProvider)
+                        .createBackup();
+
+                    if (context.mounted) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: Text('Backup created:\n${file.path}'),
+                        ),
+                      );
+                    }
+                  },
+                  child: const Text('Create Backup'),
                 ),
               ],
             ),
