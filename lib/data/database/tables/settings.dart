@@ -29,6 +29,8 @@ class Settings extends Table {
 
   TextColumn get lastAlertMonth => text().withDefault(Constant(''))();
 
+  TextColumn get lastBackupAt => text().nullable()();
+
   TextColumn get createdAt => text()();
 
   TextColumn get updatedAt => text()();
