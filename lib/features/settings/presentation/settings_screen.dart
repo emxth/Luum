@@ -5,6 +5,7 @@ import 'package:go_router/go_router.dart';
 
 import '../../../data/database/app_database.dart';
 import '../../../data/providers/settings_provider.dart';
+import '../../../data/repositories/settings_repository.dart';
 import '../providers/budget_summary_provider.dart';
 import '../providers/settings_provider.dart';
 
@@ -168,12 +169,35 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
 
                 const Divider(),
 
+                DropdownButton<String>(
+                  value: backupFrequency,
+                  items: const [
+                    DropdownMenuItem(value: 'daily', child: Text('Daily')),
+                    DropdownMenuItem(value: 'weekly', child: Text('Weekly')),
+                    DropdownMenuItem(value: 'monthly', child: Text('Monthly')),
+                  ],
+                  onChanged: (value) async {
+                    if (value == null) {
+                      return;
+                    }
+
+                    await SettingsRepository.updateBackupFrequency(value);
+
+                    ref.invalidate(settingsProvider);
+                  },
+                ),
+
                 ListTile(
                   title: const Text('Backup'),
                   trailing: const Icon(Icons.chevron_right),
                   onTap: () {
                     context.push('/backup');
                   },
+                ),
+
+                ListTile(
+                  title: const Text('Backup Frequency'),
+                  subtitle: Text(settings.backupFrequency),
                 ),
 
                 ElevatedButton(
