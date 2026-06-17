@@ -70,4 +70,9 @@ class SettingsRepository {
     await (database.update(database.settings)..where((tbl) => tbl.id.equals(1)))
         .write(SettingsCompanion(lastAlertSent: Value(value)));
   }
+
+  Future<void> updateLastBackupDate(String value) async {
+    await (database.update(database.settings)..where((tbl) => tbl.id.equals(1)))
+        .write(SettingsCompanion(lastBackupAt: Value(value)));
+  }
 }
