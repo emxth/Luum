@@ -100,6 +100,6 @@ class BackupService {
   }
 
   Future<void> shareBackup(File file) async {
-    await Share.shareXFiles([XFile(file.path)]);
+    await SharePlus.instance.share(ShareParams(files: [XFile(file.path)]));
   }
 }
