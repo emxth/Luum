@@ -1,6 +1,7 @@
 import 'package:drift/drift.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../features/backup/providers/backup_provider.dart';
 import '../database/app_database.dart';
 import '../providers/database_provider.dart';
 import '../services/seed_service.dart';
@@ -30,4 +31,6 @@ final startupProvider = FutureProvider<void>((ref) async {
   await seedService.seed();
 
   await settingsRepo.checkMonthChange();
+
+  await ref.read(backupServiceProvider).runAutoBackup();
 });
