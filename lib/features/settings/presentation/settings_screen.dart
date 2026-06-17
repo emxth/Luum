@@ -105,14 +105,6 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
             padding: const EdgeInsets.all(16),
             child: Column(
               children: [
-                TextField(
-                  controller: monthlyLimitController,
-                  keyboardType: TextInputType.number,
-                  decoration: const InputDecoration(labelText: 'Monthly Limit'),
-                ),
-
-                const SizedBox(height: 16),
-
                 SwitchListTile(
                   title: const Text('Notifications'),
                   value: notificationsEnabled,
@@ -130,14 +122,6 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                     setState(() {
                       backupEnabled = value;
                     });
-                  },
-                ),
-
-                ListTile(
-                  title: const Text('Backup'),
-                  trailing: const Icon(Icons.chevron_right),
-                  onTap: () {
-                    context.push('/backup');
                   },
                 ),
 
@@ -173,27 +157,29 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
 
                 const SizedBox(height: 24),
 
+                const Divider(),
+
+                TextField(
+                  controller: monthlyLimitController,
+                  keyboardType: TextInputType.number,
+                  decoration: const InputDecoration(labelText: 'Monthly Limit'),
+                ),
+
+                const SizedBox(height: 16),
+
+                const Divider(),
+
+                ListTile(
+                  title: const Text('Backup'),
+                  trailing: const Icon(Icons.chevron_right),
+                  onTap: () {
+                    context.push('/backup');
+                  },
+                ),
+
                 ElevatedButton(
                   onPressed: saveSettings,
                   child: const Text('Save Settings'),
-                ),
-
-                // !Temporary
-                ElevatedButton(
-                  onPressed: () async {
-                    final file = await ref
-                        .read(backupServiceProvider)
-                        .createBackup();
-
-                    if (context.mounted) {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(
-                          content: Text('Backup created:\n${file.path}'),
-                        ),
-                      );
-                    }
-                  },
-                  child: const Text('Create Backup'),
                 ),
               ],
             ),
