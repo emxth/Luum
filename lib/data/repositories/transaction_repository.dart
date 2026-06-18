@@ -1,5 +1,6 @@
 import 'package:drift/drift.dart';
 
+import '../../features/reports/models/category_breakdown_model.dart';
 import '../database/app_database.dart';
 
 class TransactionRepository {
@@ -146,5 +147,55 @@ class TransactionRepository {
         .getSingle();
 
     return (rows.data['total'] as num?)?.toDouble() ?? 0;
+  }
+
+  Future<int> getCurrentMonthTransactionCount() async {
+    final now = DateTime.now();
+    final start = DateTime(now.year, now.month, 1);
+    final end = DateTime(now.year, now.month + 1, 1);
+
+    final rows =
+        await (database.select(database.transactions)..where(
+              (t) =>
+                  t.date.isBiggerOrEqualValue(start.toIso8601String()) &
+                  t.date.isSmallerThanValue(end.toIso8601String()),
+            ))
+            .get();
+
+    return rows.length;
+  }
+
+  Future<List<CategoryBreakdownModel>>
+  getCurrentMonthExpenseByCategory() async {
+    final now = DateTime.now();
+
+    final result = await database
+        .customSelect(
+          '''
+          SELECT
+            c.name as category_name,
+            SUM(t.amount) as total_amount
+          FROM transactions t
+          INNER JOIN categories c
+            ON c.id = t.category_id
+          WHERE t.type = 'expense'
+            AND strftime('%Y', t.date) = ?
+            AND strftime('%m', t.date) = ?
+          GROUP BY c.name
+          ORDER BY total_amount DESC
+          ''',
+          variables: [
+            Variable(now.year.toString()),
+            Variable(now.month.toString().padLeft(2, '0')),
+          ],
+        )
+        .get();
+
+    return result.map((row) {
+      return CategoryBreakdownModel(
+        categoryName: row.read<String>('category_name'),
+        amount: (row.read<num>('total_amount')).toDouble(),
+      );
+    }).toList();
   }
 }
