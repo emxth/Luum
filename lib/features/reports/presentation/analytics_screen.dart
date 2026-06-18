@@ -2,9 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../providers/analytics_provider.dart';
+import '../providers/category_chart_provider.dart';
+import '../providers/monthly_trend_provider.dart';
 import '../providers/top_category_provider.dart';
 import '../providers/spending_trend_provider.dart';
 import '../utils/health_helper.dart';
+import '../widgets/category_bar_chart.dart';
+import '../widgets/category_pie_chart.dart';
+import '../widgets/monthly_trend_chart.dart';
 
 class AnalyticsScreen extends ConsumerWidget {
   const AnalyticsScreen({super.key});
@@ -16,6 +21,10 @@ class AnalyticsScreen extends ConsumerWidget {
     final topCategory = ref.watch(topCategoryProvider);
 
     final trend = ref.watch(spendingTrendProvider);
+
+    final categoryChart = ref.watch(categoryChartProvider);
+
+    final monthlyTrend = ref.watch(monthlyTrendProvider);
 
     return Scaffold(
       appBar: AppBar(title: const Text('Analytics')),
@@ -79,6 +88,36 @@ class AnalyticsScreen extends ConsumerWidget {
                     ),
                   ],
                 );
+              },
+              loading: () => const CircularProgressIndicator(),
+              error: (e, _) => Text(e.toString()),
+            ),
+
+            const Divider(),
+
+            categoryChart.when(
+              data: (data) {
+                return CategoryPieChart(data: data);
+              },
+              loading: () => const CircularProgressIndicator(),
+              error: (e, _) => Text(e.toString()),
+            ),
+
+            const Divider(),
+
+            categoryChart.when(
+              data: (data) {
+                return CategoryBarChart(data: data);
+              },
+              loading: () => const CircularProgressIndicator(),
+              error: (e, _) => Text(e.toString()),
+            ),
+
+            const Divider(),
+
+            monthlyTrend.when(
+              data: (data) {
+                return MonthlyTrendChart(data: data);
               },
               loading: () => const CircularProgressIndicator(),
               error: (e, _) => Text(e.toString()),
