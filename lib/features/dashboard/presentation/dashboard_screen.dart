@@ -163,7 +163,6 @@ class DashboardScreen extends ConsumerWidget {
                   error: (e, _) => Text(e.toString()),
                 ),
 
-                // !Temporary for testing
                 budget.when(
                   data: (data) {
                     return Column(
@@ -239,6 +238,13 @@ class DashboardScreen extends ConsumerWidget {
                     context.push('/reports/monthly');
                   },
                   child: const Text('Monthly Report'),
+                ),
+
+                ElevatedButton(
+                  onPressed: () {
+                    context.push('/reports/yearly');
+                  },
+                  child: const Text('Yearly Report'),
                 ),
               ],
             ),
