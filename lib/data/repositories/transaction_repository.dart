@@ -1,6 +1,7 @@
 import 'package:drift/drift.dart';
 
 import '../../features/reports/models/category_breakdown_model.dart';
+import '../../features/reports/models/chart_data.dart';
 import '../../features/reports/models/yearly_report_model.dart';
 import '../database/app_database.dart';
 
@@ -214,5 +215,17 @@ class TransactionRepository {
     }
 
     return results;
+  }
+
+  Future<List<ChartData>> getExpenseCategoryChartData() async {
+    final categories = await getCurrentMonthExpenseByCategory();
+
+    return categories
+        .map((e) => ChartData(label: e.categoryName, value: e.amount))
+        .toList();
+  }
+
+  Future<List<YearlyReportModel>> getMonthlyTrendData() async {
+    return getYearlyReport(DateTime.now().year);
   }
 }
