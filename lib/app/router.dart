@@ -9,6 +9,7 @@ import '../features/loans/presentation/add_loan_payment_screen.dart';
 import '../features/loans/presentation/add_loan_screen.dart';
 import '../features/loans/presentation/loan_details_screen.dart';
 import '../features/loans/presentation/loans_screen.dart';
+import '../features/reports/presentation/monthly_report_screen.dart';
 import '../features/settings/presentation/settings_screen.dart';
 import '../features/transactions/presentation/add_transaction_screen.dart';
 import '../features/transactions/presentation/transaction_list_screen.dart';
@@ -136,6 +137,14 @@ final router = GoRouter(
       path: '/backup',
       builder: (context, state) {
         return const BackupScreen();
+      },
+    ),
+
+    // Report routes
+    GoRoute(
+      path: '/reports/monthly',
+      builder: (context, state) {
+        return const MonthlyReportScreen();
       },
     ),
   ],
