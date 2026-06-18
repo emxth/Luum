@@ -1,6 +1,7 @@
 import 'package:drift/drift.dart';
 
 import '../../features/reports/models/category_breakdown_model.dart';
+import '../../features/reports/models/yearly_report_model.dart';
 import '../database/app_database.dart';
 
 class TransactionRepository {
@@ -197,5 +198,21 @@ class TransactionRepository {
         amount: (row.data['total_amount'] as num).toDouble(),
       );
     }).toList();
+  }
+
+  Future<List<YearlyReportModel>> getYearlyReport(int year) async {
+    final results = <YearlyReportModel>[];
+
+    for (var month = 1; month <= 12; month++) {
+      final income = await getIncomeForMonth(year, month);
+
+      final expense = await getExpenseForMonth(year, month);
+
+      results.add(
+        YearlyReportModel(month: month, income: income, expense: expense),
+      );
+    }
+
+    return results;
   }
 }
