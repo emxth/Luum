@@ -194,7 +194,7 @@ class TransactionRepository {
     return result.map((row) {
       return CategoryBreakdownModel(
         categoryName: row.read<String>('category_name'),
-        amount: (row.read<num>('total_amount')).toDouble(),
+        amount: (row.data['total_amount'] as num).toDouble(),
       );
     }).toList();
   }
