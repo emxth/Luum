@@ -107,4 +107,44 @@ class TransactionRepository {
           ..limit(5))
         .get();
   }
+
+  Future<double> getIncomeForMonth(int year, int month) async {
+    final rows = await database
+        .customSelect(
+          '''
+          SELECT SUM(amount) total
+          FROM transactions
+          WHERE type = 'income'
+          AND strftime('%Y', date)=?
+          AND strftime('%m', date)=?
+          ''',
+          variables: [
+            Variable(year.toString()),
+            Variable(month.toString().padLeft(2, '0')),
+          ],
+        )
+        .getSingle();
+
+    return (rows.data['total'] as num?)?.toDouble() ?? 0;
+  }
+
+  Future<double> getExpenseForMonth(int year, int month) async {
+    final rows = await database
+        .customSelect(
+          '''
+          SELECT SUM(amount) total
+          FROM transactions
+          WHERE type = 'expense'
+          AND strftime('%Y', date)=?
+          AND strftime('%m', date)=?
+          ''',
+          variables: [
+            Variable(year.toString()),
+            Variable(month.toString().padLeft(2, '0')),
+          ],
+        )
+        .getSingle();
+
+    return (rows.data['total'] as num?)?.toDouble() ?? 0;
+  }
 }
