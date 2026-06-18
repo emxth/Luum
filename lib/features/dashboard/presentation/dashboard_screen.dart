@@ -6,6 +6,7 @@ import '../../../data/providers/startup_provider.dart';
 import '../../goals/providers/active_goals_provider.dart';
 import '../../goals/providers/goal_dashboard_provider.dart';
 import '../../loans/providers/loan_dashboard_provider.dart';
+import '../../reports/providers/savings_rate_provider.dart';
 import '../../settings/providers/budget_summary_provider.dart';
 import '../../settings/providers/current_month_provider.dart';
 import '../../settings/providers/monthly_usage_provider.dart';
@@ -27,6 +28,7 @@ class DashboardScreen extends ConsumerWidget {
     final monthlyUsage = ref.watch(monthlyUsageProvider);
     final budget = ref.watch(budgetSummaryProvider); // !Temporary for testing
     final month = ref.watch(currentMonthProvider);
+    final savingsRate = ref.watch(savingsRateProvider);
 
     return startup.when(
       loading: () {
@@ -171,6 +173,19 @@ class DashboardScreen extends ConsumerWidget {
                         Text('Remaining: Rs. ${data.remaining}'),
                         LinearProgressIndicator(value: data.progress),
                       ],
+                    );
+                  },
+                  loading: () => const CircularProgressIndicator(),
+                  error: (e, _) => Text(e.toString()),
+                ),
+
+                savingsRate.when(
+                  data: (rate) {
+                    return Card(
+                      child: ListTile(
+                        title: const Text('Savings Rate'),
+                        subtitle: Text('${rate.toStringAsFixed(1)}%'),
+                      ),
                     );
                   },
                   loading: () => const CircularProgressIndicator(),
