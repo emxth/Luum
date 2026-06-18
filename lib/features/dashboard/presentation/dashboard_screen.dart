@@ -246,6 +246,13 @@ class DashboardScreen extends ConsumerWidget {
                   },
                   child: const Text('Yearly Report'),
                 ),
+
+                ElevatedButton(
+                  onPressed: () {
+                    context.push('/reports/analytics');
+                  },
+                  child: const Text('Analytics'),
+                ),
               ],
             ),
           ),
