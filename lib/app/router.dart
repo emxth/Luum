@@ -12,6 +12,10 @@ import '../features/loans/presentation/loans_screen.dart';
 import '../features/reports/presentation/analytics_screen.dart';
 import '../features/reports/presentation/monthly_report_screen.dart';
 import '../features/reports/presentation/yearly_report_screen.dart';
+import '../features/settings/presentation/add_category_screen.dart';
+import '../features/settings/presentation/add_payment_method_screen.dart';
+import '../features/settings/presentation/categories_screen.dart';
+import '../features/settings/presentation/payment_methods_screen.dart';
 import '../features/settings/presentation/settings_screen.dart';
 import '../features/transactions/presentation/add_transaction_screen.dart';
 import '../features/transactions/presentation/transaction_list_screen.dart';
@@ -131,6 +135,50 @@ final router = GoRouter(
       path: '/settings',
       builder: (context, state) {
         return const SettingsScreen();
+      },
+    ),
+
+    GoRoute(
+      path: '/settings/categories',
+      builder: (context, state) {
+        return const CategoriesScreen();
+      },
+    ),
+
+    GoRoute(
+      path: '/settings/categories/add',
+      builder: (context, state) {
+        return const AddCategoryScreen();
+      },
+    ),
+
+    GoRoute(
+      path: '/settings/categories/edit/:id',
+      builder: (context, state) {
+        return AddCategoryScreen(categoryId: state.pathParameters['id']);
+      },
+    ),
+
+    GoRoute(
+      path: '/settings/payment-methods',
+      builder: (context, state) {
+        return const PaymentMethodsScreen();
+      },
+    ),
+
+    GoRoute(
+      path: '/settings/payment-methods/add',
+      builder: (context, state) {
+        return const AddPaymentMethodScreen();
+      },
+    ),
+
+    GoRoute(
+      path: '/settings/payment-methods/edit/:id',
+      builder: (context, state) {
+        return AddPaymentMethodScreen(
+          paymentMethodId: state.pathParameters['id'],
+        );
       },
     ),
 
