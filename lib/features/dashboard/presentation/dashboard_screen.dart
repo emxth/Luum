@@ -10,8 +10,6 @@ import '../../loans/providers/loan_dashboard_provider.dart';
 import '../../reports/providers/savings_rate_provider.dart';
 import '../../settings/providers/budget_summary_provider.dart';
 import '../../settings/providers/current_month_provider.dart';
-import '../../settings/providers/monthly_usage_provider.dart';
-import '../../settings/widgets/current_month_usage_card.dart';
 import '../../transactions/providers/recent_transactions_provider.dart';
 import '../providers/dashboard_provider.dart';
 
@@ -26,8 +24,7 @@ class DashboardScreen extends ConsumerWidget {
     final goalSummary = ref.watch(goalDashboardProvider);
     final activeGoals = ref.watch(activeGoalsProvider);
     final loanDashboard = ref.watch(loanDashboardProvider);
-    final monthlyUsage = ref.watch(monthlyUsageProvider);
-    final budget = ref.watch(budgetSummaryProvider); // !Temporary for testing
+    final budget = ref.watch(budgetSummaryProvider);
     final month = ref.watch(currentMonthProvider);
     final savingsRate = ref.watch(savingsRateProvider);
 
