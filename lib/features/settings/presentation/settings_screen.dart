@@ -200,6 +200,24 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                   subtitle: Text(data.backupFrequency),
                 ),
 
+                const Divider(),
+
+                ElevatedButton(
+                  onPressed: () {
+                    context.push('/settings/categories');
+                  },
+                  child: const Text('Categories'),
+                ),
+
+                ElevatedButton(
+                  onPressed: () {
+                    context.push('/settings/payment-methods');
+                  },
+                  child: const Text('Payment Methods'),
+                ),
+
+                const Divider(),
+
                 ElevatedButton(
                   onPressed: saveSettings,
                   child: const Text('Save Settings'),
