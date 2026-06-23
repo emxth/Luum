@@ -51,11 +51,11 @@ class _BackupScreenState extends ConsumerState<BackupScreen> {
 
                 ref.invalidate(lastBackupProvider);
 
-                if (mounted) {
-                  ScaffoldMessenger.of(
-                    context,
-                  ).showSnackBar(SnackBar(content: Text('Backup created')));
-                }
+                if (!context.mounted) return;
+
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(content: Text('Backup created')),
+                );
               },
               child: const Text('Create Backup'),
             ),
