@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../../core/widgets/app_bottom_navigation.dart';
 import '../../../data/providers/goal_provider.dart';
 import '../providers/active_goals_provider.dart';
 import '../providers/completed_goals_provider.dart';
@@ -96,6 +97,8 @@ class GoalsScreen extends ConsumerWidget {
         loading: () => const CircularProgressIndicator(),
         error: (e, _) => Text(e.toString()),
       ),
+
+      bottomNavigationBar: const AppBottomNavigation(currentIndex: 3),
     );
   }
 }
