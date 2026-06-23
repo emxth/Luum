@@ -42,4 +42,10 @@ class PaymentMethodRepository {
 
     return true;
   }
+
+  Future<PaymentMethod?> getById(String id) {
+    return (database.select(
+      database.paymentMethods,
+    )..where((tbl) => tbl.id.equals(id))).getSingleOrNull();
+  }
 }
