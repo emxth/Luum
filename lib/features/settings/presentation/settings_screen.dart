@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../../core/widgets/app_bottom_navigation.dart';
 import '../../../data/database/app_database.dart';
 import '../../../data/providers/settings_provider.dart';
 import '../providers/budget_summary_provider.dart';
@@ -229,6 +230,8 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
         loading: () => const Center(child: CircularProgressIndicator()),
         error: (e, _) => Center(child: Text(e.toString())),
       ),
+
+      bottomNavigationBar: const AppBottomNavigation(currentIndex: 4),
     );
   }
 
