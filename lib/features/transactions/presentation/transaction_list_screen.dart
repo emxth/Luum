@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../../core/widgets/app_bottom_navigation.dart';
 import '../../../features/transactions/providers/transaction_list_provider.dart';
 import '../../../data/providers/transaction_provider.dart';
 import '../../settings/providers/budget_summary_provider.dart';
@@ -50,6 +51,8 @@ class TransactionListScreen extends ConsumerWidget {
         loading: () => const CircularProgressIndicator(),
         error: (e, _) => Text(e.toString()),
       ),
+
+      bottomNavigationBar: const AppBottomNavigation(currentIndex: 1),
     );
   }
 }
