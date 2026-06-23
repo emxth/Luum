@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'router.dart';
-import 'theme.dart';
+import 'theme/app_theme.dart';
 
 class LuumApp extends StatelessWidget {
   const LuumApp({super.key});
@@ -11,7 +11,9 @@ class LuumApp extends StatelessWidget {
     return MaterialApp.router(
       title: 'Luum',
       debugShowCheckedModeBanner: false,
-      theme: AppTheme.lightTheme,
+      theme: AppTheme.light,
+      darkTheme: AppTheme.dark,
+      themeMode: ThemeMode.system,
       routerConfig: router,
     );
   }
