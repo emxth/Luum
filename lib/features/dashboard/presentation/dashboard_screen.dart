@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../../core/widgets/app_bottom_navigation.dart';
 import '../../../data/providers/startup_provider.dart';
 import '../../goals/providers/active_goals_provider.dart';
 import '../../goals/providers/goal_dashboard_provider.dart';
@@ -152,17 +153,6 @@ class DashboardScreen extends ConsumerWidget {
                   error: (e, _) => Text(e.toString()),
                 ),
 
-                monthlyUsage.when(
-                  data: (data) {
-                    return CurrentMonthUsageCard(
-                      income: data.income,
-                      expense: data.expense,
-                    );
-                  },
-                  loading: () => const CircularProgressIndicator(),
-                  error: (e, _) => Text(e.toString()),
-                ),
-
                 budget.when(
                   data: (data) {
                     return Column(
@@ -193,48 +183,6 @@ class DashboardScreen extends ConsumerWidget {
 
                 ElevatedButton(
                   onPressed: () {
-                    context.push('/transactions/add/expense');
-                  },
-                  child: const Text('Add Expense'),
-                ),
-
-                ElevatedButton(
-                  onPressed: () {
-                    context.push('/transactions/add/income');
-                  },
-                  child: const Text('Add Income'),
-                ),
-
-                ElevatedButton(
-                  onPressed: () {
-                    context.push('/transactions');
-                  },
-                  child: const Text('View Transactions'),
-                ),
-
-                ElevatedButton(
-                  onPressed: () {
-                    context.push('/goals');
-                  },
-                  child: const Text('Goals'),
-                ),
-
-                ElevatedButton(
-                  onPressed: () {
-                    context.push('/loans');
-                  },
-                  child: const Text('Loans'),
-                ),
-
-                ElevatedButton(
-                  onPressed: () {
-                    context.push('/settings');
-                  },
-                  child: const Text('Settings'),
-                ),
-
-                ElevatedButton(
-                  onPressed: () {
                     context.push('/reports/monthly');
                   },
                   child: const Text('Monthly Report'),
@@ -256,6 +204,8 @@ class DashboardScreen extends ConsumerWidget {
               ],
             ),
           ),
+
+          bottomNavigationBar: const AppBottomNavigation(currentIndex: 0),
         );
       },
     );
