@@ -34,4 +34,24 @@ class CategoryRepository {
       database.categories,
     )..where((tbl) => tbl.id.equals(id))).go();
   }
+
+  Future<bool> isCategoryUsed(String categoryId) async {
+    final result = await (database.select(
+      database.transactions,
+    )..where((tbl) => tbl.categoryId.equals(categoryId))).get();
+
+    return result.isNotEmpty;
+  }
+
+  Future<bool> deleteCategorySafe(String id) async {
+    final used = await isCategoryUsed(id);
+
+    if (used) {
+      return false;
+    }
+
+    await deleteCategory(id);
+
+    return true;
+  }
 }
