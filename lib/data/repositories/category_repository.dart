@@ -54,4 +54,10 @@ class CategoryRepository {
 
     return true;
   }
+
+  Future<Category?> getById(String id) {
+    return (database.select(
+      database.categories,
+    )..where((tbl) => tbl.id.equals(id))).getSingleOrNull();
+  }
 }
