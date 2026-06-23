@@ -8,3 +8,7 @@ final categoryRepositoryProvider = Provider<CategoryRepository>((ref) {
 
   return CategoryRepository(database);
 });
+
+final categoriesProvider = FutureProvider((ref) async {
+  return ref.read(categoryRepositoryProvider).getAllCategories();
+});
