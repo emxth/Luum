@@ -10,3 +10,7 @@ final paymentMethodRepositoryProvider = Provider<PaymentMethodRepository>((
 
   return PaymentMethodRepository(database);
 });
+
+final paymentMethodsProvider = FutureProvider((ref) async {
+  return ref.read(paymentMethodRepositoryProvider).getAllPaymentMethods();
+});
