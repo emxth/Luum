@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../data/database/app_database.dart';
+import '../../../data/providers/payment_method_provider.dart';
 import '../../../data/providers/transaction_provider.dart';
 import '../../dashboard/providers/dashboard_provider.dart';
 import '../../settings/providers/budget_notification_provider.dart';
@@ -14,7 +15,6 @@ import '../providers/category_list_provider.dart';
 import '../providers/recent_transactions_provider.dart';
 import '../providers/transaction_details_provider.dart';
 import '../providers/transaction_list_provider.dart';
-import '../providers/payment_method_list_provider.dart';
 
 class AddTransactionScreen extends ConsumerStatefulWidget {
   final String transactionType;
