@@ -180,6 +180,13 @@ class DashboardScreen extends ConsumerWidget {
 
                 ElevatedButton(
                   onPressed: () {
+                    context.push('/loans');
+                  },
+                  child: const Text('Loans'),
+                ),
+
+                ElevatedButton(
+                  onPressed: () {
                     context.push('/reports/monthly');
                   },
                   child: const Text('Monthly Report'),
